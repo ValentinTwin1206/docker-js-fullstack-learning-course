@@ -1,0 +1,22 @@
+<div class="bg-light border-end" style="width: 250px; min-height: calc(100vh - 56px);">
+  <div class="list-group list-group-flush">
+    <div 
+      class="list-group-item border-0 fw-bold text-muted"
+      style="font-size: 0.85rem;">Operations
+      </div>
+    <a href="/admin/users" class="list-group-item list-group-item-action {{#if isUsersView}}active{{/if}}">
+      Users
+    </a>
+    <a href="/admin/users-growth" class="list-group-item list-group-item-action {{#if isUserGrowthView}}active{{/if}}">
+      Statistics
+    </a>
+    
+    <div
+      class="list-group-item border-0 fw-bold text-muted"
+      style="font-size: 0.85rem;">Maintenance
+    </div>
+    <a href="#maintenance" class="list-group-item list-group-item-action">
+      Maintenance
+    </a>
+  </div>
+</div>

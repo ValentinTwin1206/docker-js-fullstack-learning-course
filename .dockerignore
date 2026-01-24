@@ -1,0 +1,40 @@
+# Node/Bun modules
+node_modules
+npm-debug.log*
+bun.lockb
+
+# Development & testing
+tests/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+playwright.config.js
+
+# VCS and local config
+.git
+.gitignore
+.env*
+.test
+
+# IDE & Editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Documentation
+*.md
+LICENSE
+
+# Cache & logs
+*.log
+*.tmp

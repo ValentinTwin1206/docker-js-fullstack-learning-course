@@ -1,0 +1,61 @@
+# Spike/Burst Test Configuration - GUI
+# Purpose: Test GUI behavior under sudden traffic spikes
+# Duration: ~8 minutes
+# Usage: artillery run tests/load/gui/spike.yml --config tests/load/gui/gui-flows.yml
+
+config:
+  target: "{{ $env.SERVER_URL }}:{{ $env.SERVER_PORT }}"
+
+  # Phases - load appropriate .env-{MATURITY} file before running
+  phases:
+    - duration: 2m
+      arrivalRate: 1
+      name: "Warm-up phase"
+    
+    - duration: 1m
+      arrivalRate: 1
+      rampTo: 20
+      name: "Ramp to spike"
+    
+    - duration: 3m
+      arrivalRate: 20
+      name: "Spike sustained load"
+    
+    - duration: 1m
+      arrivalRate: 20
+      rampTo: 1
+      name: "Cool down"
+    
+    - pause: 30
+  
+  # Load processor for custom functions
+  processor: "../helpers/test-helpers.cjs"
+
+  variables:
+    username: "{{ $env.TEST_USER_USERNAME }}"
+    password: "{{ $env.TEST_USER_PASS }}"
+  
+  engines:
+    playwright:
+      launchOptions:
+        headless: true
+        args:
+          - '--disable-gpu'
+          - '--no-sandbox'
+          - '--disable-dev-shm-usage'
+  
+  # Limit concurrent virtual users to prevent browser instance explosion
+  pool: 10
+  
+  # Plugins
+  plugins:
+    ensure:
+      maxErrorRate: 5
+  
+  # Performance thresholds
+  ensure:
+    maxErrorRate: 5
+    max:
+      http.response_time.p99: 2000
+      http.response_time.p95: 1000
+      http.response_time.median: 500

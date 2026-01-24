@@ -1,0 +1,43 @@
+# Soak Test Configuration - GUI
+# Purpose: Long-running test to find memory leaks and resource issues in GUI flows
+# Duration: 6-12 hours
+# Usage: artillery run tests/load/gui/soak.yml --config tests/load/gui/gui-flows.yml
+
+config:
+  target: "{{ $env.SERVER_URL }}:{{ $env.SERVER_PORT }}"
+  
+  # Phases - load appropriate .env-{MATURITY} file before running
+  phases:
+    - duration: 5m
+      arrivalRate: 1
+      rampTo: 3
+      name: "Gradual ramp-up"
+    
+    - duration: 30m
+      arrivalRate: 3
+      name: "Sustained baseline load"
+  
+  # Load processor for custom functions
+  processor: "../helpers/test-helpers.cjs"
+
+  variables:
+    username: "{{ $env.TEST_USER_USERNAME }}"
+    password: "{{ $env.TEST_USER_PASS }}"
+  
+  engines:
+    playwright: {}
+  
+  # Plugins
+  plugins:
+    ensure:
+      maxErrorRate: 1
+  
+  # Performance requirements
+  ensure:
+    maxErrorRate: 1
+    max:
+      http.response_time.p99: 1500
+      http.response_time.p95: 800
+      http.response_time.median: 300
+    min:
+      vusers.completed: 100  # At least 100 VUs should complete

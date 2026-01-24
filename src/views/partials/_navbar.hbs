@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/home">FancyFileServer</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Left side -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link {{#if isHome}}active{{/if}}" href="/home">Home</a>
+        </li>
+
+        <!-- Admin Link (visible only for admins) -->
+        {{#if isAdmin}}
+        <li class="nav-item">
+          <a class="nav-link {{#if isAdminView}}active{{/if}}" href="/admin/users">Admin</a>
+        </li>
+        {{/if}}
+      </ul>
+
+      <!-- Right side (Profile Dropdown) -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {{#if isProfile}}active{{/if}}" href="#" id="navbarProfile" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            Profile
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarProfile">
+            <li><a class="dropdown-item" href="/profile">Edit Profile</a></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

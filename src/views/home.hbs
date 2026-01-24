@@ -1,0 +1,301 @@
+{{!< layout}}
+{{> _navbar isHome=true}}
+
+<h1>Welcome {{username}}</h1>
+
+<!-- Upload & Search Controls -->
+<div class="mt-5 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#uploadModal">
+      Upload
+    </button>
+
+    <input 
+      id="fileSearchInput"
+      type="text"
+      class="form-control"
+      style="width: 300px;"
+      placeholder="Search by filename (min 3 letters)">
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <label for="filesPerPage" class="form-label mb-0">Show:</label>
+    <select id="filesPerPage" class="form-select form-select-sm" style="width:auto;">
+      <option value="10" selected>10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    <span id="fileCountText" class="text-muted small ms-2"></span>
+  </div>
+</div>
+
+<!-- Files Table Container -->
+<div id="filesContainer"></div>
+
+<!-- Pagination Container -->
+<div id="paginationContainer" class="tui-pagination mt-4 d-flex justify-content-center"></div>
+
+<!-- Upload File Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload a File</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Select a file</label>
+            <input type="file" name="file" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Show File Content Modal -->
+<div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contentModalLabel">File Content</h5>
+        <button 
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body" id="contentModalBody">
+        <p class="text-muted">Loading...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const username = "{{username}}";
+  const filesContainer = document.getElementById('filesContainer');
+  const paginationContainer = document.getElementById('paginationContainer');
+  const fileSearchInput = document.getElementById('fileSearchInput');
+  const filesPerPageSelect = document.getElementById('filesPerPage');
+  const fileCountText = document.getElementById('fileCountText');
+
+  let pagination;
+  let currentPage = 1;
+  let currentLimit = parseInt(filesPerPageSelect.value);
+  let currentSearch = "";
+
+  const renderFilesTable = files => {
+    if (!files || !files.length)
+      return '<p class="mt-3 text-muted text-center">No files found.</p>';
+
+    return `
+      <table class="table table-striped mt-3 align-middle">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Size (KB)</th>
+            <th>Uploaded At</th>
+            <th>File Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${files.map(file => `
+            <tr>
+              <td>${file.originalName}</td>
+              <td>${(file.size / 1024).toFixed(1)}</td>
+              <td>${new Date(file.createdAt).toLocaleString()}</td>
+              <td>
+                ${file.isBinary 
+                  ? '<span class="badge bg-light text-dark">binary</span>' 
+                  : ''}
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-lightgray show-content-btn" 
+                        data-id="${file._id}" data-filename="${file.originalName}" data-mimetype="${file.mimetype}">
+                  Show
+                </button>
+                <button type="button" class="btn btn-sm btn-lightred delete-file-btn" 
+                        data-id="${file._id}" data-filename="${file.originalName}">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  };
+
+  async function loadFiles(page = 1) {
+    try {
+      const params = new URLSearchParams({
+        username,
+        page,
+        limit: currentLimit,
+      });
+      if (currentSearch.length >= 2) params.append("search", currentSearch);
+
+      const res = await apiRequest(`/api/v1/file?${params.toString()}`, 'GET', null, "application/json", true);
+      if (!res.success) {
+        filesContainer.innerHTML = `<p class="text-danger">${res.error || 'Unable to load files.'}</p>`;
+        return;
+      }
+
+      const { files, total, limit, page: current } = res.data;
+      filesContainer.innerHTML = renderFilesTable(files);
+
+      const start = total === 0 ? 0 : (current - 1) * limit + 1;
+      const end = Math.min(current * limit, total);
+      fileCountText.textContent = `${start}-${end} of ${total}`;
+
+      if (!pagination) {
+        pagination = new tui.Pagination(paginationContainer, {
+          totalItems: total,
+          itemsPerPage: limit,
+          visiblePages: 5,
+          page: current,
+          centerAlign: true,
+          usageStatistics: false
+        });
+
+        pagination.on('afterMove', e => {
+          currentPage = e.page;
+          loadFiles(currentPage);
+        });
+      } else {
+        pagination.setTotalItems(total);
+        pagination._options.itemsPerPage = limit;
+        if (pagination.getCurrentPage() !== current)
+          pagination.setCurrentPage(current);
+      }
+
+      attachFileHandlers();
+    } catch (err) {
+      filesContainer.innerHTML = `<p class="text-danger">Error loading files.</p>`;
+      console.error(err);
+    }
+  }
+
+  function attachFileHandlers() {
+    document.querySelectorAll('.show-content-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const { id: fileId, filename } = button.dataset;
+        const modalBody = document.getElementById('contentModalBody');
+        document.getElementById('contentModalLabel').textContent = `File Content: ${filename}`;
+        modalBody.innerHTML = `<p class="text-muted">Loading...</p>`;
+
+        try {
+          const response = await fetch(`/api/v1/files/${fileId}`);
+          if (!response.ok) throw new Error('Failed to fetch file');
+
+          const contentType = response.headers.get('Content-Type') || '';
+          let content;
+          if (contentType.startsWith('text/') || contentType === 'application/json') {
+            const text = await response.text();
+            content = `<pre style="white-space: pre-wrap;">${text}</pre>`;
+          } else if (contentType.startsWith('image/')) {
+            const blob = await response.blob();
+            const imgUrl = URL.createObjectURL(blob);
+            content = `<img src="${imgUrl}" class="img-fluid" />`;
+          } else if (contentType === 'application/pdf') {
+            const blob = await response.blob();
+            const pdfUrl = URL.createObjectURL(blob);
+            content = `<embed src="${pdfUrl}" type="application/pdf" width="100%" height="600px" />`;
+          } else {
+            content = `<p class="text-muted">Preview not supported. <a href="/api/v1/files/${fileId}" target="_blank">Download</a></p>`;
+          }
+
+          modalBody.innerHTML = content;
+        } catch (err) {
+          modalBody.innerHTML = `<p class="text-danger">Error loading file.</p>`;
+          console.error(err);
+        }
+
+        new bootstrap.Modal(document.getElementById('contentModal')).show();
+      });
+    });
+
+    document.querySelectorAll('.delete-file-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const { id, filename } = btn.dataset;
+        const confirmDelete = await Swal.fire({
+          icon: 'warning',
+          title: 'Delete File?',
+          text: `Are you sure you want to delete "${filename}"?`,
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'Cancel',
+        });
+        if (!confirmDelete.isConfirmed) return;
+
+        try {
+          const res = await apiRequest(`/api/v1/files/${id}`, 'DELETE', null, "application/json", true);
+          if (!res.success) throw new Error(res.error || 'Delete failed');
+          loadFiles(currentPage);
+        } catch (err) {
+          Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Network error' });
+        }
+      });
+    });
+  }
+
+  // Event handlers
+  filesPerPageSelect.addEventListener('change', () => {
+    currentLimit = parseInt(filesPerPageSelect.value);
+    currentPage = 1;
+    pagination = null;
+    loadFiles(currentPage);
+  });
+
+  fileSearchInput.addEventListener('input', e => {
+    currentSearch = e.target.value.trim();
+    currentPage = 1;
+    pagination = null;
+    loadFiles(currentPage);
+  });
+
+  // Initial load
+  loadFiles(1);
+
+  // Upload handling
+  document.querySelector('#uploadForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    
+    // Create FormData manually to ensure uploadedBy comes BEFORE the file
+    const formData = new FormData();
+    formData.append('uploadedBy', username);
+    
+    const fileInput = event.target.querySelector('input[type="file"]');
+
+    if (fileInput.files[0])
+      formData.append('file', fileInput.files[0]);
+
+    try {
+      const result = await apiRequestMultipart('/api/v1/files', 'POST', formData, true);
+      if (result.success) {
+        bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+        event.target.reset();
+        loadFiles(currentPage);
+        showToast(result.message, result.statusCode, true);
+      } else {
+        showToast(result.message || 'Upload failed', result.statusCode || 500, false);
+      }
+    } catch (err) {
+      showToast(err.message || 'Network error', 500, false);
+      console.error(err);
+    }
+  });
+});
+</script>

@@ -1,0 +1,13 @@
+# GUI User Flow Scenarios
+# Purpose: Reusable GUI flow definitions for load testing
+# Usage: Referenced by smoke.yml, spike.yml, and soak.yml via --config flag
+
+scenarios:
+  # Scenario 1: User Login Flow using
+  - engine: playwright
+    beforeScenario: "generateApiKeys"
+    testFunction: loginUser
+  
+  # Scenario 2: User Registration Flow
+  - engine: playwright
+    testFunction: registerUser

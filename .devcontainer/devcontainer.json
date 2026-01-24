@@ -1,0 +1,34 @@
+{
+  "name": "Fancy FileServer DevContainer",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "dev_container",
+  "workspaceFolder": "/workspace",
+  "runServices": [
+    "app",
+    "dev_container",
+    "mongo",
+    "redis"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright",
+        "GitHub.copilot-chat"
+      ]
+    }
+  },
+   "forwardPorts": [
+    9323
+  ],
+  "portsAttributes": {
+    "9323": {
+      "label": "Metrics Port",
+      "onAutoForward": "silent"
+    }
+  },
+  "remoteUser": "node",
+  "overrideCommand": false
+}

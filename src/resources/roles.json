@@ -1,0 +1,14 @@
+[
+  {
+    "role": "user",
+    "description": "Regular user with non-elevated permissions"
+  },
+  {
+    "role": "admin",
+    "description": "Administrator with elevated permissions"
+  },
+  {
+    "role": "sysadmin",
+    "description": "System administrator with highest permissions"
+  }
+]

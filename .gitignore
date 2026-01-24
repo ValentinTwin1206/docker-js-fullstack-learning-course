@@ -1,0 +1,15 @@
+.env*
+.test
+node_modules
+bun.lock
+
+# Ngrok configuration with auth token
+ngrok.yml
+
+# Artillery load test reports
+tests/load/reports/*.json
+tests/load/reports/*.html
+tests/load/reports/*.xml
+.vscode/
+1-4/.vscode
+.DS_Store

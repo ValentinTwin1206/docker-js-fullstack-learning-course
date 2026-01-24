@@ -1,0 +1,48 @@
+# Spike/Burst Test Configuration - API
+# Purpose: Test API behavior under sudden traffic spikes
+# Duration: ~8 minutes
+# Usage: artillery run tests/load/api/spike.yml
+
+config:
+  target: "{{ $env.SERVER_URL }}:{{ $env.SERVER_PORT }}"
+
+  # Phases - load appropriate .env-{MATURITY} file before running
+  phases:
+    - duration: 2m
+      arrivalRate: 1
+      name: "Warm-up phase"
+    
+    - duration: 1m
+      arrivalRate: 1
+      rampTo: 20
+      name: "Ramp to spike"
+    
+    - duration: 3m
+      arrivalRate: 20
+      name: "Spike sustained load"
+    
+    - duration: 1m
+      arrivalRate: 20
+      rampTo: 1
+      name: "Cool down"
+    
+    - pause: 30
+  
+  # Load processor for custom functions
+  processor: "../helpers/test-helpers.cjs"
+  
+  # Plugins
+  plugins:
+    ensure:
+      maxErrorRate: 5  # Allow up to 5% error rate during spike
+    
+    metrics-by-endpoint:
+      stripQueryString: true
+  
+  # Performance thresholds
+  ensure:
+    maxErrorRate: 5
+    max:
+      http.response_time.p99: 2000
+      http.response_time.p95: 1000
+      http.response_time.median: 500

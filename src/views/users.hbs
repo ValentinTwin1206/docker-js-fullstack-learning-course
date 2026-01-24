@@ -1,0 +1,197 @@
+{{!< layout}}
+{{> _navbar isAdmin=true isAdminView=true}}
+
+<div class="d-flex">
+  {{> _sidemenu}}
+  
+  <div class="flex-grow-1 p-4">
+    <h4 class="mb-4">Registered Users</h4>
+
+    <!-- Search & Display Controls -->
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <input id="userSearch" type="text" class="form-control w-50"
+             placeholder="Search by username (min 3 letters)">
+
+      <div class="d-flex align-items-center gap-2">
+        <label for="itemsPerPage" class="form-label mb-0">Show:</label>
+        <select id="itemsPerPage" class="form-select form-select-sm" style="width: auto;">
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span id="userCountText" class="text-muted ms-2 small"></span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table id="usersTable" class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Permission</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- Users will be injected here by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="tui-pagination mt-3 d-flex justify-content-center"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const tbody = document.getElementById("usersTableBody");
+  const searchInput = document.getElementById("userSearch");
+  const paginationContainer = document.getElementById("pagination");
+  const itemsPerPageSelect = document.getElementById("itemsPerPage");
+  const userCountText = document.getElementById("userCountText");
+
+  let pagination = null;
+  let currentPage = 1;
+  let currentQuery = "";
+  let currentLimit = parseInt(itemsPerPageSelect.value);
+
+  // Render user rows
+  function renderUsers(users) {
+    tbody.innerHTML = "";
+    users.forEach(user => {
+      const isSysadmin = user.role === "sysadmin";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>
+          <span class="badge ${
+            user.role === "admin" ? "bg-success" :
+            user.role === "sysadmin" ? "bg-danger" : "bg-secondary"
+          }">${user.role}</span>
+        </td>
+        <td class="d-flex gap-2 align-items-center">
+          <div class="form-check form-switch" title="Toggle admin rights for ${user.username}">
+            <input class="form-check-input role-switch" type="checkbox"
+                   data-username="${user.username}"
+                   ${user.role === "admin" ? "checked" : ""}
+                   ${isSysadmin ? "disabled" : ""}>
+          </div>
+          <button class="btn btn-sm btn-lightred delete-user-btn"
+                  data-username="${user.username}"
+                  title="Delete this user"
+                  ${isSysadmin ? "disabled" : ""}>
+            Delete
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Toggle admin role
+    document.querySelectorAll(".role-switch:not([disabled])").forEach(switchEl => {
+      switchEl.addEventListener("change", async (e) => {
+        const username = e.target.getAttribute("data-username");
+        const newRole = e.target.checked ? "admin" : "user";
+        await apiRequest(`/api/v1/roles/${username}`, "PATCH", { role: newRole });
+      });
+    });
+
+    // Delete user
+    document.querySelectorAll(".delete-user-btn:not([disabled])").forEach(deleteBtn => {
+      deleteBtn.addEventListener("click", async (e) => {
+        const username = e.target.getAttribute("data-username");
+        if (!confirm(`Are you sure you want to delete user '${username}'?`)) return;
+        try {
+          const result = await apiRequest(`/api/v1/users/${username}`, "DELETE");
+          if (result.success) {
+            e.target.closest("tr").remove();
+            showToast(`User '${username}' deleted successfully`, 200, true);
+            loadUsers(currentPage, currentQuery); // Refresh table
+          } else {
+            showToast(result.error || "Failed to delete user", 400, false);
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Error deleting user", 500, false);
+        }
+      });
+    });
+  }
+
+  // Fetch & render users
+  async function loadUsers(page = 1, username = "") {
+    try {
+      const queryParams = new URLSearchParams({ page, limit: currentLimit });
+      if (username && username.length >= 3) queryParams.append("username", username);
+
+      const res = await apiRequest(`/api/v1/user?${queryParams.toString()}`, "GET", null, "application/json", true);
+
+      if (!res.success) {
+        showToast("Could not fetch users", res.statusCode || 500, false);
+        return;
+      }
+
+      const { users, total, limit, page: current } = res.data;
+      renderUsers(users);
+
+      // Update the range info (e.g. 1–10 of 500)
+      const start = total === 0 ? 0 : (current - 1) * limit + 1;
+      const end = Math.min(current * limit, total);
+      userCountText.textContent = `${start}-${end} of ${total}`;
+
+      // Initialize or update pagination
+      if (!pagination) {
+        pagination = new tui.Pagination(paginationContainer, {
+          totalItems: total,
+          itemsPerPage: limit,
+          visiblePages: 5,
+          page: current,
+          centerAlign: true
+        });
+
+        pagination.on("afterMove", (event) => {
+          currentPage = event.page;
+          loadUsers(currentPage, currentQuery);
+        });
+
+      } else {
+        pagination.setTotalItems(total);
+        pagination._options.itemsPerPage = limit; // update limit dynamically
+        if (pagination.getCurrentPage() !== current) {
+          pagination.setCurrentPage(current);
+        }
+      }
+
+    } catch (err) {
+      console.error("Failed to load users:", err);
+      showToast("Error fetching users", 500, false);
+    }
+  }
+
+  // Search
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value.trim();
+    if (value.length >= 3 || value.length === 0) {
+      currentQuery = value;
+      currentPage = 1;
+      loadUsers(currentPage, currentQuery);
+    }
+  });
+
+  // Change items per page
+  itemsPerPageSelect.addEventListener("change", () => {
+    currentLimit = parseInt(itemsPerPageSelect.value);
+    currentPage = 1;
+    pagination = null; // reset pagination
+    loadUsers(currentPage, currentQuery);
+  });
+
+  // Initial load
+  loadUsers(currentPage, currentQuery);
+});
+</script>

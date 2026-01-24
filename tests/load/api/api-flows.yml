@@ -1,0 +1,119 @@
+# API Endpoint Scenarios
+# Purpose: Reusable API flow definitions for load testing
+# Usage: Referenced by smoke.yml and spike.yml via $ref
+
+config:
+  processor: "../helpers/test-helpers.cjs"
+
+scenarios:
+  # Scenario 1: API Health Check (2.5% of traffic)
+  - name: "Health Check"
+    weight: 0.25
+    flow:
+      - get:
+          url: "/healthcheck"
+          expect:
+            - statusCode: 200
+  
+  # Scenario 2: Authenticated API - Get Users (10% of traffic)
+  - name: "Get Users List"
+    weight: 1
+    beforeScenario: "generateApiKeys"
+    flow:
+      - get:
+          url: "/api/v1/users"
+          headers:
+            Authorization: "Bearer {{ SYS_USER_TOKEN }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+  
+  # Scenario 3: Get Paginated Users (5% of traffic)
+  - name: "Get Paginated Users"
+    weight: 0.5
+    beforeScenario: "generateApiKeys"
+    flow:
+      - get:
+          url: "/api/v1/user"
+          headers:
+            Authorization: "Bearer {{ SYS_USER_TOKEN }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+  
+  # Scenario 4: Get Specific User (5% of traffic)
+  - name: "Get User by Username"
+    weight: 0.5
+    beforeScenario: "generateApiKeys"
+    flow:
+      - get:
+          url: "/api/v1/users/{{ TEST_USER_USERNAME }}"
+          headers:
+            Authorization: "Bearer {{ TEST_USER_TOKEN }}"
+          expect:
+            - statusCode: 200
+  
+  # Scenario 5: Create User (10% of traffic)
+  - name: "Create New User"
+    weight: 1
+    flow:
+      - function: "createRandomUser"
+      - post:
+          url: "/api/v1/users"
+          json:
+            firstname: "{{ randomUser.firstname }}"
+            lastname: "{{ randomUser.lastname }}"
+            email: "{{ randomUser.email }}"
+            password: "{{ randomUser.password }}"
+          capture:
+            - json: "$.username"
+              as: "newUsername"
+              strict: false
+      - log: "Attempt to register '{{ randomUser.firstname }} {{ randomUser.lastname }} ({{ randomUser.email }})'"
+  
+  # Scenario 6: Create API Key (2.5% of traffic)
+  - name: "Create API Key"
+    weight: 0.25
+    beforeScenario: "generateApiKeys"
+    flow:
+      - post:
+          url: "/api/v1/apikeys"
+          headers:
+            Authorization: "Bearer {{ TEST_USER_TOKEN }}"
+          json:
+            username: "{{ TEST_USER_USERNAME }}"
+          expect:
+            - statusCode:
+              - 201
+              - 409
+  
+  # Scenario 7: Upload File (40% of traffic)
+  - name: "Upload File"
+    weight: 4
+    beforeScenario: "generateApiKeys"
+    flow:
+      - function: "createRandomFile"
+      - post:
+          url: "/api/v1/files"
+          headers:
+            Authorization: "Bearer {{ TEST_USER_TOKEN }}"
+          formData:
+            uploadedBy: "{{ TEST_USER_USERNAME }}"
+            file:
+              fromFile: "{{ randomFilePath }}"
+          capture:
+            - json: "$.data.id"
+              as: "uploadedFileId"
+              strict: false
+      - log: "Attempt to upload file '{{ randomFileName }}' ({{ randomFileSize }} bytes)"
+  
+  # Scenario 8: Files List (15% of traffic)
+  - name: "Get Files List"
+    weight: 1.5
+    flow:
+      - get:
+          url: "/api/v1/files?username={{ $env.TEST_USER_USERNAME }}"
+          headers:
+            Authorization: "Bearer {{ $env.TEST_USER_TOKEN }}"
+          expect:
+            - statusCode: 200

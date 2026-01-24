@@ -1,0 +1,101 @@
+services:
+  dev_container:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: fancy_fileserver_devcontainer
+    env_file:
+      - .env-dev
+    volumes:
+      - .:/workspace:cached
+    ports:
+      - "9323:9323"
+    networks:
+      - fancy_fileserver
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    profiles: ["dev"]
+    command: sleep infinity
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: fancy_fileserver_dev
+    env_file:
+      - .env-dev
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:        
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    profiles: ["dev"]
+    volumes:
+      - ./src:/app/src
+    networks:
+      - fancy_fileserver
+    # healthcheck:
+    #   test: ["CMD", "bun", "-e", "if((await fetch('http://localhost:3000/healthcheck')).status!==200)process.exit(1)"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 5s
+
+  app_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    container_name: fancy_fileserver_prod
+    env_file:
+      - .env-prod
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    profiles: ["prod"]
+    networks:
+      - fancy_fileserver
+    # healthcheck:
+    #   test: ["CMD", "bun", "-e", "if((await fetch('http://localhost:3000/healthcheck')).status!==200)process.exit(1)"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fancy_fileserver
+
+  redis:
+    image: redis:7.2
+    container_name: redisdb
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - fancy_fileserver
+
+networks:
+  fancy_fileserver:
+
+volumes:
+  mongo_data:
+  redis_data:

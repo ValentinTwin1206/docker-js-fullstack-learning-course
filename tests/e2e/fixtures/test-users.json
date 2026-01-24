@@ -1,0 +1,57 @@
+{
+  "admin": {
+    "firstname": "Admin",
+    "lastname": "User",
+    "password": "AdminPass789!"
+  },
+  "jane": {
+    "firstname": "Jane",
+    "lastname": "Smith",
+    "password": "SecurePass456!"
+  },
+  "john": {
+    "firstname": "John",
+    "lastname": "Doe",
+    "password": "Password123!"
+  },
+  "preRegistered": {
+    "firstname": "Theresa",
+    "lastname": "Tauscher",
+    "email": "theresa@tauscher.com",
+    "password": "SecurePass123!",
+    "new_name": "Tessa",
+    "new_mail": "theresa2@tauscher.com"
+  },
+  "invalid": {
+    "firstname": "$$$qwer123",
+    "lastname": "$$$er",
+    "email": "bad@example.com",
+    "password": "123456"
+  },
+  "invalidEmail": {
+    "firstname": "Bob",
+    "lastname": "Smith",
+    "email": "not-an-email",
+    "password": "Password123!"
+  },
+  "invalidFirstname": {
+    "firstname": "John123",
+    "lastname": "Doe",
+    "password": "Password123!"
+  },
+  "invalidLastname": {
+    "firstname": "Jane",
+    "lastname": "Sm!th",
+    "password": "Password123!"
+  },
+  "shortPassword": {
+    "firstname": "Alice",
+    "lastname": "Johnson",
+    "password": "12345"
+  },
+  "tooShortFirstname": {
+    "firstname": "J",
+    "lastname": "Doe",
+    "password": "Password123!"
+  }
+}
