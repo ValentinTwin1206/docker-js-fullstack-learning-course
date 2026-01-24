@@ -24,6 +24,7 @@ jobs:
           sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
           sed -i "s|{REPLACE_WITH_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-dev
           sed -i "s|{REPLACE_WITH_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-dev
+          sed -i "s|{REPLACE_WITH_TEST_PASSWORD}|${{ secrets.TEST_USER_PASS }}|g" .env-dev
           
           # 3. Inject GH variables
           sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-dev
@@ -32,11 +33,15 @@ jobs:
       - name: Prepare .env-prod from sample
         run: |
 
-          # Create .env-prod for docker-compose validation (not used in dev profile)
+          # 1. Rename the sample file
           cp sample.env-prod .env-prod
+
+          # 2. Inject GH secrets
           sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-prod
           sed -i "s|{REPLACE_WITH_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-prod
           sed -i "s|{REPLACE_WITH_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-prod
+          
+          # 3. Inject GH variables
           sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-prod
 
       - name: Build and Run DevContainer Task
@@ -50,14 +55,17 @@ jobs:
             bats --version
             npx playwright --version
             
-            echo "--- Execution: API Tests (BATS) ---"
+            echo "::notice::Running functional API Tests (BATS)"
             npm run test:api
             
-            echo "--- Execution: UI Tests (Playwright) ---"
-            npm run test:ui -- --project=chromium
+            echo "::notice::Running functional GUI Tests (Playwright)"
+            npm run test:gui -- --project=chromium
             
-            echo "--- Execution: Load Tests (Artillery Smoke) ---"
+            echo "::notice::Running load API Tests (Artillery Smoke)"
             npm run test:load:smoke:api
+
+            echo "::notice::Running load GUI Tests (Artillery Smoke)"
+            npm run test:load:smoke:gui
 
       - name: Upload Playwright Artifacts
         if: always()
