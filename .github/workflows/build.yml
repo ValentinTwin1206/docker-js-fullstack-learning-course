@@ -16,18 +16,18 @@ jobs:
 
       - name: Prepare .env-dev from sample
         run: |
+
           # 1. Rename the sample file
           cp sample.env-dev .env-dev
           
-          # 2. Inject Secrets using sed (s/OLD/NEW/g)
-          # We use | as a delimiter in case the secrets contain slashes
-          sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.JWT_SECRET }}|g" .env-dev
+          # 2. Inject GH secrets
+          sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
           sed -i "s|{REPLACE_WITH_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-dev
-          sed -i "s|{PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-dev
+          sed -i "s|{REPLACE_WITH_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-dev
           
-          # 3. Inject Variables
-          sed -i "s|sysadmin1234|${{ vars.SYS_USER_USERNAME }}|g" .env-dev
-          sed -i "s|testuser5678|${{ vars.TEST_USER_USERNAME }}|g" .env-dev
+          # 3. Inject GH variables
+          sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-dev
+          sed -i "s|{REPLACE_WITH_TEST_USERNAME}|${{ vars.TEST_USER_USERNAME }}|g" .env-dev
 
       - name: Build and Run DevContainer Task
         uses: devcontainers/ci@v0.3
