@@ -41,7 +41,7 @@ COPY --chown=node:node package.json package-lock.json* ./
 #
 # 4. INSTALL DEPENDENCIES
 # # # # # # # # #
-RUN npm install --omit=prod --no-audit --no-fund
+RUN npm install --no-audit --no-fund
 
 ENV PATH=/workspace/node_modules/.bin:$PATH
 
