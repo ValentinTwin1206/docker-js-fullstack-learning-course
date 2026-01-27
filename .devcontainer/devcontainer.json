@@ -29,6 +29,7 @@
       "onAutoForward": "silent"
     }
   },
+  "postCreateCommand": "bun install",
   "remoteUser": "node",
   "overrideCommand": false
 }

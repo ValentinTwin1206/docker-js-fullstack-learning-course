@@ -7,16 +7,13 @@
     "start": "bun src/config/index.js",
     "start:dev": "bun --watch src/config/index.js",
     "test:api": "bats tests/e2e/api --formatter tap --verbose-run",
-    "test:gui": "npx playwright test",
-    "test:gui:headed": "npx playwright test --headed",
-    "test:gui:debug": "npx playwright test --debug",
-    "test:e2e": "npm run test:api && npm run test:gui",
-    "test:load:smoke:api": "npx artillery run tests/load/api/smoke.yml --config tests/load/api/api-flows.yml",
-    "test:load:smoke:gui": "npx artillery run tests/load/gui/smoke.yml --config tests/load/gui/gui-flows.yml",
-    "test:load:spike:api": "npx artillery run tests/load/api/spike.yml --config tests/load/api/api-flows.yml",
-    "test:load:spike:gui": "npx artillery run tests/load/gui/spike.yml --config tests/load/gui/gui-flows.yml",
-    "test:load:soak:api": "npx artillery run tests/load/api/soak.yml --config tests/load/api/api-flows.yml",
-    "test:load:soak:gui": "npx artillery run tests/load/gui/soak.yml --config tests/load/gui/gui-flows.yml"
+    "test:gui": "bunx playwright test",
+    "test:load:smoke:api": "bunx artillery run tests/load/api/smoke.yml --config tests/load/api/api-flows.yml",
+    "test:load:smoke:gui": "bunx artillery run tests/load/gui/smoke.yml --config tests/load/gui/gui-flows.yml",
+    "test:load:spike:api": "bunx artillery run tests/load/api/spike.yml --config tests/load/api/api-flows.yml",
+    "test:load:spike:gui": "bunx artillery run tests/load/gui/spike.yml --config tests/load/gui/gui-flows.yml",
+    "test:load:soak:api": "bunx artillery run tests/load/api/soak.yml --config tests/load/api/api-flows.yml",
+    "test:load:soak:gui": "bunx artillery run tests/load/gui/soak.yml --config tests/load/gui/gui-flows.yml"
   },
   "dependencies": {
     "@fastify/cookie": "^7.0.0",

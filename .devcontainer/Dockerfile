@@ -5,7 +5,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Set Playwright browsers path to shared location (outside node_modules)
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-
 #
 # 1. SYSTEM PACKAGES
 # # # # # # # # #
@@ -19,15 +18,19 @@ RUN apt-get update && apt-get upgrade -y \
         dnsutils \
     && rm -rf /var/lib/apt/lists/*
 
-
 #
-# 2. PLAYWRIGHT + PLAYWRIGHT BROWSERS (as root)
+# 2. BUN + PLAYWRIGHT + ARTILLERY
 # # # # # # # # #
+# Install Bun and create symlinks for both bun and bunx in /usr/local/bin
+RUN curl -fsSL https://bun.com/install | bash \
+    && cp /root/.bun/bin/bun /usr/local/bin/bun \
+    && cp /root/.bun/bin/bunx /usr/local/bin/bunx
+
+# Install Playwright and Artillery globally
 RUN mkdir -p /ms-playwright \
     && npm install -g @playwright/test@1.57.0 \
     && npx playwright install chromium firefox webkit --with-deps \
     && chown -R node:node /ms-playwright
-
 
 #
 # 3. SETUP WORKSPACE
@@ -35,23 +38,15 @@ RUN mkdir -p /ms-playwright \
 USER node
 WORKDIR /workspace
 
-COPY --chown=node:node package.json package-lock.json* ./
-
-
-#
-# 4. INSTALL DEPENDENCIES
-# # # # # # # # #
-RUN npm install --no-audit --no-fund
-
+# Ensure local node_modules binaries are in the path
 ENV PATH=/workspace/node_modules/.bin:$PATH
 
-
 #
-# 5. SANITY CHECKS
-# # # # # # # #
+# 4. SANITY CHECKS
+# # # # # # # # #
 RUN bats --version \
-    && npx playwright --version \
-    && npx artillery --version
+    && bun --version \
+    && bunx playwright --version
 
 EXPOSE 9323
 
