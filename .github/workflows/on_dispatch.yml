@@ -1,0 +1,21 @@
+name: Manual Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      container_tag:
+        description: 'Docker image tag'
+        required: true
+        type: string
+      upload_container:
+        description: 'Upload Docker image to registry'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/build.yml
+    with:
+      container_tag: ${{ inputs.container_tag }}
+      upload_container: ${{ inputs.upload_container }}

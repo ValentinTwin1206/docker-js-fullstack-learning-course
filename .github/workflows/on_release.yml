@@ -1,0 +1,12 @@
+name: On Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/build.yml
+    with:
+      container_tag: ${{ github.event.release.tag_name }}
+      upload_container: true
