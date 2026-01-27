@@ -29,7 +29,8 @@ RUN curl -fsSL https://bun.com/install | bash \
 # Install Playwright and Artillery globally
 RUN mkdir -p /ms-playwright \
     && npm install -g @playwright/test@1.57.0 \
-    && npx playwright install chromium firefox webkit --with-deps \
+    && npx playwright install --with-deps \
+    #&& npx playwright install chromium firefox webkit --with-deps \
     && chown -R node:node /ms-playwright
 
 #
