@@ -52,7 +52,6 @@ Please read the docs.
 - Open Visual Studio Code at the project root directory
 - When prompted, click **Reopen in Container** (or use Command Palette: `Dev Containers: Reopen in Container`)
   <img src="./images/reopen_in_container.png" alt="Logo" width="400"/>
-
 - Wait for the containers to build and start (this may take several minutes on first run due to Playwright browser binaries installation)
 - Once ready, you'll have a fully configured development environment with all dependencies installed
 - Open any Web browser and navigate to `http://127.0.0.1:3000/home`
