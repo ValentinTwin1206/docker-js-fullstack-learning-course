@@ -1,0 +1,7 @@
+# Global owner - Approves everything
+* @ValentinTwin1206
+
+# Specific protection rules
+/.devcontainer/       @ValentinTwin1206
+/docker-compose.yml   @ValentinTwin1206
+/.github/workflows/   @ValentinTwin1206
