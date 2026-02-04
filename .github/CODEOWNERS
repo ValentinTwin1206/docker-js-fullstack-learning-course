@@ -3,11 +3,11 @@
 
 # Infrastructure & Docker changes require specific eyes
 /.devcontainer/ @ValentinTwin1206
-/Dockerfile     @@ValentinTwin1206
+/Dockerfile     @ValentinTwin1206
 /sample.env*    @ValentinTwin1206
 
 # CI/CD Workflow changes
-/.github/workflows/ @@ValentinTwin1206
+/.github/workflows/ @ValentinTwin1206
 
 # Test suite changes (API, GUI, Load tests)
-/tests/         @@ValentinTwin1206
+/tests/         @ValentinTwin1206
