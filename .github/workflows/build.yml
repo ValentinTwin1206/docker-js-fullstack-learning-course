@@ -101,5 +101,5 @@ jobs:
           push: true
           # Using multi-line syntax for tags is cleaner and less error-prone
           tags: |
-            ${{ vars.CONTAINER_REPO }}:${{ inputs.container_tag }}
-            ${{ vars.CONTAINER_REPO }}:latest
+            ${{ secrets.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}
+            ${{ secrets.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}
