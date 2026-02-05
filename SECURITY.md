@@ -1,14 +1,12 @@
 # Security Policy
 
-## Intentionally Weak By Design
-
-⚠️ NOTE that the **FancyFileServer is a training project designed exclusively for learning DevOps techniques.** This application is intentionally "weak by design." 
+The **FancyFileServer is a training project designed exclusively for learning DevOps techniques.** This application is intentionally "weak by design". 
 It contains known security flaws to facilitate learning about:
 * Insecure container configurations
 * Weak password handling
 * Etc.
 
-**DO NOT use this in a production environment or with sensitive data.**
+> ⚠️ DO NOT use this in a production environment or with sensitive data.
 
 ## Reporting a Vulnerability
 
