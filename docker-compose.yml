@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
-    container_name: fancy_fileserver_devcontainer
+    container_name: ffs_devcontainer
     env_file:
       - .env-dev
     volumes:
@@ -40,12 +40,6 @@ services:
       - ./src:/app/src
     networks:
       - fancy_fileserver
-    # healthcheck:
-    #   test: ["CMD", "bun", "-e", "if((await fetch('http://localhost:3000/healthcheck')).status!==200)process.exit(1)"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-    #   start_period: 5s
 
   app_prod:
     build:
@@ -65,11 +59,6 @@ services:
     profiles: ["prod"]
     networks:
       - fancy_fileserver
-    # healthcheck:
-    #   test: ["CMD", "bun", "-e", "if((await fetch('http://localhost:3000/healthcheck')).status!==200)process.exit(1)"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
 
   mongo:
     image: mongo:7.0

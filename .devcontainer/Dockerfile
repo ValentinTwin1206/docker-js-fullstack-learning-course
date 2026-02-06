@@ -47,7 +47,7 @@ ENV PATH=/workspace/node_modules/.bin:$PATH
 # # # # # # # # #
 RUN bats --version \
     && bun --version \
-    && bunx playwright --version
+    #&& bunx playwright --version
 
 EXPOSE 9323
 

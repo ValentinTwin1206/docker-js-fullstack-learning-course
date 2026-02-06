@@ -45,24 +45,85 @@ Please read the docs.
 
 ### Setup Locally
 
-#### Use DevContainer
+#### Configure Environment Variables
 
 - Rename the file `sample.env-dev` to `.env-dev`
 - Open `.env-dev` and provide values as instructed in the file
+
+#### Use DevContainer (Recommended)
+
 - Open Visual Studio Code at the project root directory
 - When prompted, click **Reopen in Container** (or use Command Palette: `Dev Containers: Reopen in Container`)
+
   <img src="./images/reopen_in_container.png" alt="Logo" width="400"/>
+
 - Wait for the containers to build and start (this may take several minutes on first run due to Playwright browser binaries installation)
 - Once ready, you'll have a fully configured development environment with all dependencies installed
 - Open any Web browser and navigate to `http://127.0.0.1:3000/home`
 
 #### Use Docker Compose
 
-Coming soon..
+- Start the containerized services:
+  
+  ```bash
+  docker compose --profile dev up -d
+  ```
+
+- Wait for the containers to build and start (this may take several minutes on first run due to Playwright browser binaries installation)
+- Get a terminal session inside `ffs_devcontainer` container:
+
+  ```bash
+  docker exec -it ffs_devcontainer /bin/bash
+  ```
+
+- Open any Web browser and navigate to `http://127.0.0.1:3000/home`
+
+**Note**: This runs the same DevContainer environment but without VS Code integration. All services (app, MongoDB, Redis) will start together.
 
 ### Run Tests
 
-coming soon...
+> All tests should be executed from within the DevContainer environment. Make sure the application is running before executing tests.
+
+#### End-to-End API Tests (BATS)
+
+Test the REST API endpoints using BATS (Bash Automated Testing System):
+
+```bash
+bun run test:api
+```
+
+#### UI Tests (Playwright)
+
+Test the web interface with Playwright browser automation:
+
+```bash
+bun run test:gui
+```
+
+#### Load Tests (Artillery)
+
+Run performance and load tests to simulate traffic:
+
+##### Smoke Tests - Quick validation with minimal load
+
+```bash
+bun run test:load:smoke:api  # API smoke test
+bun run test:load:smoke:gui  # UI smoke test
+```
+
+##### Spike Tests - Test sudden traffic spikes
+
+```bash
+bun run test:load:spike:api  # API spike test
+bun run test:load:spike:gui  # UI spike test
+```
+
+##### Soak Tests - Long-duration tests for stability
+
+```bash
+bun run test:load:soak:api  # API soak test
+bun run test:load:soak:gui  # UI soak test
+```
 
 ## Build With GitHub
 
