@@ -1,7 +1,4 @@
 import { SignJWT } from 'jose';
-import { readFileSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 
 /**
  * Get test user data from JSON fixtures with optional unique email generation

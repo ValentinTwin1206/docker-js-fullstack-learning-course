@@ -1,3 +1,556 @@
-# User Guide
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fancy File Server - Documentation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 { 
+            color: #2c3e50; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 10px;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+        }
+        h2 { 
+            color: #34495e; 
+            margin-top: 30px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+        h3 { 
+            color: #555;
+            font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        .warning:hover {
+            background-color: #ffe69c;
+        }
+        .warning strong { color: #856404; }
+        .info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        .info:hover {
+            background-color: #bee5eb;
+        }
+        .info h5 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #0c5460;
+            font-size: 0.9em;
+        }
+        .info ul {
+            font-size: 0.8em;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            transition: background-color 0.2s ease;
+        }
+        code:hover {
+            background-color: #e8e8e8;
+        }
+        .code-wrapper {
+            position: relative;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: clamp(0.75rem, 2vw, 0.875rem);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        pre:hover {
+            background-color: #ebebeb;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        pre code:hover {
+            background-color: transparent;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+        }
+        .copy-btn.copied {
+            background-color: #27ae60;
+        }
+        ul { padding-left: 20px; }
+        li { margin: 8px 0; }
+        .log-output {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            font-size: clamp(0.75rem, 2vw, 0.875rem);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .log-output:hover {
+            background-color: #3a3a3a;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        .log-yellow {
+            color: #f1fa8c;
+        }
+        .log-info {
+            color: #8be9fd;
+        }
+        .log-green {
+            color: #50fa7b;
+        }
+        .log-blue {
+            color: #8be9fd;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .toc h2 {
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc ul ul {
+            padding-left: 20px;
+        }
+        .toc ul ul ul {
+            padding-left: 40px;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .toc a:hover {
+            color: #3498db;
+        }
+        
+        .side-note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #495057;
+        }
+        
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            .warning, .info, .toc, .side-note {
+                padding: 12px;
+            }
+            pre, .log-output {
+                padding: 10px;
+                font-size: 0.75rem;
+            }
+            .copy-btn {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            .toc ul ul {
+                padding-left: 15px;
+            }
+            .toc ul ul ul {
+                padding-left: 30px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                border-bottom-width: 2px;
+            }
+            .warning, .info, .toc, .side-note {
+                padding: 10px;
+            }
+            pre, .log-output {
+                padding: 8px;
+                font-size: 0.7rem;
+            }
+            .copy-btn {
+                top: 3px;
+                right: 3px;
+                font-size: 9px;
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Fancy FileServer</h1>
 
-Coming soon
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#introduction">Introduction</a>
+                <ul>
+                    <li><a href="#weak-dockerfile-design">Weak Dockerfile Design</a></li>
+                    <li><a href="#weak-api-design">Weak API Design</a></li>
+                </ul>
+            </li>
+            <li><a href="#instructions">Instructions</a>
+                <ul>
+                    <li><a href="#feature-development">Feature Development</a>
+                    </li>
+                    <li><a href="#container-image-hardening">Container Image Hardening</a>
+                    </li>
+                    <li><a href="#api-hardening">API Hardening</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <h2 id="introduction">Introduction</h2>
+
+    The <strong>Fancy FileServer</strong> project is intentionally weakly designed to help developers learn about API and container security best practices by identifying and addressing common vulnerabilities. 
+    This project is shipped with a streamlined architecture that provides a realistic foundation for learning security hardening techniques. 
+    The application leverages <a href="https://fakerjs.dev/" target="_blank">Faker.js</a> to provide realistic fake data to the server, enabling comprehensive testing scenarios.
+    <br><br>
+    Throughout this documentation, you'll work through hands-on tasks that cover three essential areas of modern application development:
+    
+    <ul>
+        <li><strong>Feature Development:</strong> Extending the user schema with additional fields and validation</li>
+        <li><strong>Container Image Hardening:</strong> Securing Docker configurations and implementing least-privilege principles</li>
+        <li><strong>API Hardening:</strong> Strengthening authentication mechanisms and enforcing robust password policies</li>
+    </ul>
+
+    Each task is designed to build practical skills in identifying vulnerabilities and implementing industry-standard security measures.
+
+    <h2 id="instructions">Instructions</h2>
+
+    <h3 id="getting-started">Getting Started</h3>
+
+    Before you begin, fork the public repository <a href="https://github.com/ValentinTwin1206/docker-js-fullstack-learning-course" target="_blank">docker-js-fullstack-learning-course</a> 
+    to your own GitHub account.
+
+    <h3 id="feature-development">Feature Development</h3>
+
+    <div>
+        Start the Fancy FileServer project as described in the <code>README.md</code> file. Once started, open 
+        a web browser and navigate to <a href="http://localhost:3000/login" target="_blank">http://localhost:3000/login</a> 
+        and click on the Register button to get the Registration form rendered.
+    </div>
+
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="registration_form.png" target="_blank">
+            <img src="registration_form.png" alt="Registration Form" style="max-width: 80%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </a>
+    </div>
+
+    <h4>Exercise</h4>
+    Your exercise is to capture additional demographic information by extending the User schema 
+    to persist the sexuality of newly registered users:
+    <ul>
+        <li>Update Handlebars frontend</li>
+        <li>Update backend to persist "sexuality" in database</li>
+        <li>Update test modules and functions</li>
+    </ul>
+
+    <div class="info">
+        <h5 id="hint-1">HINTS</h5>
+        <p>The following test functions and modules have a footprint for the user registration process:</p>
+        <ul>
+            <li><code>login.hbs</code> - Add a select dropdown with options: Diverse (d), Female (f), Male (m)</li>
+            <li><code>users.model.js</code> - Add the <code>sexuality</code> field as a required field of type <code>enum</code></li>
+            <li><code>database.js</code> - Update the sysadmin and testuser registration to include the sexuality field</li>
+            <li><code>database.js</code> - Update the fake user seeding to include the sexuality field</li>
+            <li><code>.env-dev</code> - Add <code>SYSADMIN_SEXUALITY</code> and <code>TEST_USER_SEXUALITY</code> environment variables</li>
+            <li><code>.env-prod</code> - Add <code>SYSADMIN_SEXUALITY</code> and <code>TEST_USER_SEXUALITY</code> environment variables</li>
+            <li><code>tests/e2e/fixtures/test-users.json</code> - Add <code>sexuality</code> field to all user objects</li>
+            <li><code>tests/e2e/helpers/test-helpers.js</code> - Update <code>registerUser()</code> function</li>
+            <li><code>tests/e2e/api/api.e2e.tests.bats</code> - Update POST /users tests (CREATED, CONFLICT, BAD REQUEST)</li>
+            <li><code>tests/e2e/gui/register-user.spec.js</code> - Update inline registration form filling to include sexuality field selection</li>
+            <li><code>tests/load/helpers/test-helpers.cjs</code> - Update <code>createRandomUser()</code></li>
+            <li><code>tests/load/api/api-flows.yml</code> - Add <code>sexuality: "{{ randomUser.sexuality }}"</code> to POST request</li>
+        </ul>
+    </div>
+
+
+    <h3 id="container-image-hardening">Container Image Hardening</h3>
+
+    To understand the security gaps and learn about container hardening, use 
+    <a href="https://github.com/docker/docker-bench-security" target="_blank">Docker Bench for Security</a>. 
+    This tool provides excellent awareness of container security fundamentals and common misconfigurations. 
+    In professional production environments, security tooling is more comprehensive and typically includes:
+    
+    <ul>
+        <li>Dockerfile linters: <strong>Hadolint</strong></li>
+        <li>Image scanning tools: <strong>Trivy</strong>, <strong>Grype</strong>, <strong>Snyk</strong></li>
+        <li>Runtime security platforms: <strong>Falco</strong>, <strong>Sysdig</strong></li>
+        <li>Policy enforcement frameworks: <strong>Open Policy Agent (OPA)</strong>, <strong>Kyverno</strong></li>
+        <li>Hardened base images: <strong>Docker Hardened Images</strong>, <strong>Distroless</strong>, <strong>Alpine</strong></li>
+    </ul>
+    
+    <div>
+        Download Docker Bench Security:
+        <pre><code>cd ~
+git clone https://github.com/docker/docker-bench-security.git
+cd docker-bench-security</code></pre>
+
+        Stop all running container:
+        <pre><code>docker stop $(docker ps -q)</code></pre>
+    </div>
+
+    <div>
+        Run the Docker Compose project:
+        <pre><code>docker compose --profile dev up -d</code></pre>
+    </div>
+
+    <div>
+        Run Docker Bench Security:
+        <pre><code>sudo sh docker-bench-security.sh -i fancy_fileserver_dev</code></pre>
+    </div>
+
+    <div>
+        After running the assessment, you should see the following output at the end of the log:
+
+        <div class="log-output">
+            <div class="log-yellow">Section C - Score</div>
+            <div><span class="log-info">[INFO]</span> Checks: 117</div>
+            <div><span class="log-info">[INFO]</span> Score: 7</div>
+        </div>
+    </div>
+
+    <h4>Exercise</h4>
+    Your goal is to improve the security score by:
+    <ul>
+        <li>Harden the Dockerfile and Docker Compose configuration</li>
+        <li>Configure appropriate file permissions</li>
+    </ul>
+
+    <div class="info">
+        <h5 id="hint-2">HINTS</h5>
+        <p>The following changes can help increase your Docker Bench Security score:</p>
+        <ul>
+            <li><code>Dockerfile</code> - Harden the container image configuration by specifying a non-privileged user</li>
+            <li><code>docker-compose.yml</code> - Add a <code>healthcheck</code> to monitor container health</li>
+            <li><code>docker-compose.yml</code> - Add <code>deploy.resources.limits</code> for CPU (<code>cpus: '0.50'</code>) and memory (<code>memory: 512M</code>)</li>
+            <li><code>docker-compose.yml</code> - Add <code>security_opt: [no-new-privileges:true]</code> to prevent privilege escalation</li>
+            <li><code>docker-compose.yml</code> - Set <code>read_only: true</code> and add <code>tmpfs: [/tmp]</code> for temporary file storage</li>
+            <li><code>docker-compose.yml</code> - Add <code>pids_limit: 100</code> to limit process spawning</li>
+            <li><code>docker-compose.yml</code> - Create a custom bridge network (<code>secure_network</code>) instead of using the default bridge</li>
+            <li>Application source code - Configure appropriate file permissions to safeguard against code injection vulnerabilities</li>
+        </ul>
+    </div>
+
+    <h3 id="api-hardening">API Hardening</h3>
+
+    The application currently accepts weak passwords with only 6 characters minimum. 
+    To identify this vulnerability through network reconnaissance, use penetration testing tools 
+    like those available in <a href="https://www.kali.org/get-kali/" target="_blank">Kali Linux</a>.<br><br>
+
+    <div>
+        Pull the Kali Linux container from Docker Hub:
+        <pre><code>docker pull kalilinux/kali-rolling</code></pre>
+    </div>
+
+    <div>
+        Run the Kali container interactively:
+        <pre><code>docker run -it --network host kalilinux/kali-rolling /bin/bash</code></pre>
+    </div>
+
+    <div>
+        Inside the Kali container, update the APT sources nmap:
+        <pre><code>apt-get update && apt-get upgrade -y</code></pre>
+    </div>
+
+    <div>
+        Inside the Kali container, install following penetration testing tools:
+        <pre><code>apt-get install -y nmap gobuster wordlists dirb hydra</code></pre>
+        
+        Tools installed:
+        <ul>
+            <li><strong>nmap</strong> - Network scanner for discovering hosts and services</li>
+            <li><strong>gobuster</strong> - Directory/file enumeration tool for web applications</li>
+            <li><strong>wordlists</strong> - Collection of wordlists for brute force attacks</li>
+            <li><strong>dirb</strong> - Web content scanner with built-in wordlists</li>
+            <li><strong>hydra</strong> - Network login brute force tool supporting multiple protocols</li>
+        </ul>
+
+        Extract the RockYou wordlist since it will later be used for brute forcing the login page::
+        <pre><code>gunzip /usr/share/wordlists/rockyou.txt.gz</code></pre>
+
+    </div>
+
+    <div>
+        On the Linux host, run following command to get the IP address of the Fancy FileServer application:
+        <pre><code>docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' fancy_fileserver_dev</code></pre>
+    </div>
+    
+    <div>
+        Inside the Kali container, discover the Fancy FileServer services:
+        <pre><code>nmap {IP_ADDRESS}</code></pre>
+
+        You should see the following output indicating that the application is running on port 3000:
+        <div class="log-output">
+            <div> Starting Nmap 7.80 ( https://nmap.org ) at 2024-06-01 12:00 UTC</div>
+            <div>Starting Nmap 7.98 ( https://nmap.org ) at 2026-02-06 05:57 +0000</div>
+            <div>scan report for 172.18.0.4</div>
+            <div>Host is up (0.0000030s latency).</div>
+            <div>Not shown: 999 closed tcp ports (reset)</div>
+            <div>PORT     STATE SERVICE</div>
+            <div>3000/tcp open  ppp</div>
+            <div>MAC Address: 72:7D:C9:27:4B:AB (Unknown)</div>
+            <div></div>
+            <div>Nmap done: 1 IP address (1 host up) scanned in 0.65 seconds</div>
+        </div>
+    </div>
+
+    <div>
+        Inside the Kali container, scan for available routes and endpoints:
+        <pre><code>gobuster dir -u http://{IP_ADDRESS}:3000 -w /usr/share/wordlists/dirb/common.txt</code></pre>
+
+        You should see the following output showing discovered routes:
+        <div class="log-output">
+            <div>===============================================================</div>
+            <div>Gobuster v3.8.2</div>
+            <div>by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)</div>
+            <div>===============================================================</div>
+            <div>[+] Url:                     http://172.18.0.4:3000</div>
+            <div>[+] Method:                  GET</div>
+            <div>[+] Threads:                 10</div>
+            <div>[+] Wordlist:                /usr/share/wordlists/dirb/common.txt</div>
+            <div>[+] Negative Status codes:   404</div>
+            <div>[+] User Agent:              gobuster/3.8.2</div>
+            <div>[+] Timeout:                 10s</div>
+            <div>===============================================================</div>
+            <div>Starting gobuster in directory enumeration mode</div>
+            <div>===============================================================</div>
+            <div>home&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="log-blue">(Status: 302)</span> [Size: 0] <span class="log-blue">[--> /login]</span></div>
+            <div>login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="log-green">(Status: 200)</span> [Size: 6470]</div>
+            <div>logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="log-blue">(Status: 302)</span> [Size: 0] <span class="log-blue">[--> /login]</span></div>
+            <div>profile&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="log-blue">(Status: 302)</span> [Size: 0] <span class="log-blue">[--> /login]</span></div>
+            <div>Progress: 4613 / 4613 (100.00%)</div>
+            <div>===============================================================</div>
+            <div>Finished</div>
+            <div>===============================================================</div>
+        </div>
+
+        <div class="side-note">
+            The scan reveals several routes, with <code>/login</code> returning status <span class="log-info">200</span>, 
+            indicating it's directly accessible. We'll concentrate on this route to perform a brute-force attack 
+            and test the application's password security.
+        </div>
+    </div>
+
+    <div>
+        Inside the Kali container, perform a brute force attack on the login route using Hydra:
+        <pre><code>hydra -l testuser5678 -P /usr/share/wordlists/rockyou.txt "http-get-form://172.18.0.4:3000/login:username=^USER^&password=^PASS^:F=Invalid credentials" -t 4</code></pre>
+
+        You should see output showing successful password discoveries:
+        <div class="log-output">
+            <div>Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).</div>
+            <div></div>
+            <div>Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-02-06 07:27:45</div>
+            <div>[DATA] max 4 tasks per 1 server, overall 4 tasks, 14344399 login tries (l:1/p:14344399), ~3586100 tries per task</div>
+            <div>[DATA] attacking http-get-form://172.18.0.4:3000/login:username=^USER^&password=^PASS^:F=Invalid credentials</div>
+            <div>[<span class="log-green">3000</span>][<span class="log-green">http-get-form</span>] host: <span class="log-green">172.18.0.4</span>   login: <span class="log-green">testuser5678</span>   password: <span class="log-green">{PASSWORD}</span></div>
+            <div>1 of 1 target successfully completed, 4 valid passwords found</div>
+            <div>Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-02-06 07:27:47</div>
+        </div>
+    </div>
+
+    <h4>Exercise</h4>
+    Your goal is to enforce strong password requirements by:
+    <ul>
+        <li>Implement frontend password validation</li>
+        <li>Implement backend password validation</li>
+    </ul>
+
+    <div class="info">
+        <h5 id="hint-3">HINTS</h5>
+        <ul>
+            <li><code>login.hbs</code> - Implement password validation for the registration process</li>
+            <li><code>package.json</code> - Integrate <a href="https://www.npmjs.com/package/validator" target="_blank"><code>validator</code></a> NPM library</li>
+            <li><code>users.model.js</code> - Implement strong password validation using the <code>isStrongPassword()</code> method from the validator library</li>
+            <li><code>users.model.js</code> - Add <code>validate: { validator: isStrongPassword }</code> to the <code>password</code> field in <code>users.model.js</code></li>
+        </ul>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add copy buttons to all pre>code blocks
+        document.querySelectorAll('pre code').forEach(function(codeBlock) {
+            const pre = codeBlock.parentElement;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-wrapper';
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+            
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            
+            button.addEventListener('click', function() {
+                const text = codeBlock.textContent;
+                navigator.clipboard.writeText(text).then(function() {
+                    button.textContent = 'Copied!';
+                    button.classList.add('copied');
+                    setTimeout(function() {
+                        button.textContent = 'Copy';
+                        button.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+            
+            wrapper.appendChild(button);
+        });
+    });
+</script>
+</body>
+</html>
