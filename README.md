@@ -39,7 +39,7 @@ This project serves as a practical example for implementing CI/CD pipelines, con
 
 ## User Guide
 
-Please read the docs.
+Please read the [learning instructions](https://valentintwin1206.github.io/docker-js-fullstack-learning-course/).
 
 ## Development
 
