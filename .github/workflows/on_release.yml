@@ -10,3 +10,4 @@ jobs:
     with:
       container_tag: ${{ github.event.release.tag_name }}
       upload_container: true
+    secrets: inherit
