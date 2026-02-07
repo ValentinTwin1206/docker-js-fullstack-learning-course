@@ -100,5 +100,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}
-            ${{ secrets.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}
+            ${{ vars.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}
+            ${{ vars.DOCKER_REPOSITORY }}:latest
