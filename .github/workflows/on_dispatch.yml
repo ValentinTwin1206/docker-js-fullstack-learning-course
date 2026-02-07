@@ -19,3 +19,5 @@ jobs:
     with:
       container_tag: ${{ inputs.container_tag }}
       upload_container: ${{ inputs.upload_container }}
+    secrets: inherit
+    
