@@ -29,8 +29,7 @@ RUN curl -fsSL https://bun.com/install | bash \
 # Install Playwright and Artillery globally
 RUN mkdir -p /ms-playwright \
     && npm install -g @playwright/test@1.58.0 \
-    && npx playwright install --with-deps \ 
-    # npx playwright install chromium firefox webkit --with-deps \
+    && npx playwright install --with-deps \
     && chown -R node:node /ms-playwright
 
 #
@@ -47,7 +46,7 @@ ENV PATH=/workspace/node_modules/.bin:$PATH
 # # # # # # # # #
 RUN bats --version \
     && bun --version \
-    #&& bunx playwright --version
+    && bunx playwright --version
 
 EXPOSE 9323
 
