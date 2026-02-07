@@ -4,18 +4,14 @@ on:
   pull_request:
     branches:
       - main
-    # Optional: trigger only when files in these paths change
     paths-ignore:
       - 'README.md'
       - 'docs/**'
 
 jobs:
   call-build:
-    # This must call the same build.yml used in your ruleset
     uses: ./.github/workflows/build.yml
     with:
-      # We use the PR number as a tag to keep it unique
       container_tag: "pr-${{ github.event.pull_request.number }}"
-      # Usually, you don't want to push to Docker Hub during a PR check
       upload_container: false
-    secrets: inherit # Ensures the called workflow can access the API keys/secrets
+    secrets: inherit
