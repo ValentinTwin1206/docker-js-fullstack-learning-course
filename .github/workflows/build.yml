@@ -37,6 +37,9 @@ jobs:
           sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-dev
           sed -i "s|{REPLACE_WITH_TEST_USERNAME}|${{ vars.TEST_USER_USERNAME }}|g" .env-dev
 
+          # debug
+          cat .env-dev
+
       - name: Prepare .env-prod from sample
         run: |
 
