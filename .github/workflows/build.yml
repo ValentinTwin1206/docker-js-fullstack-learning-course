@@ -40,20 +40,6 @@ jobs:
           # debug
           cat .env-dev
 
-      - name: Prepare .env-prod from sample
-        run: |
-
-          # 1. Rename the sample file
-          cp sample.env-prod .env-prod
-
-          # 2. Inject GH secrets
-          sed -i "s|{REPLACE_WITH_YOUR_CUSTOM_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-prod
-          sed -i "s|{REPLACE_WITH_YOUR_CUSTOM_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-prod
-          sed -i "s|{REPLACE_WITH_YOUR_CUSTOM_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-prod
-          
-          # 3. Inject GH variables
-          sed -i "s|{REPLACE_WITH_YOUR_CUSTOM_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-prod
-
       - name: Build and Run DevContainer Task
         uses: devcontainers/ci@v0.3
         with:
