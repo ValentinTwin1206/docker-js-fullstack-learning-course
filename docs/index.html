@@ -4,239 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fancy File Server - Documentation</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #333;
-        }
-        h1 { 
-            color: #2c3e50; 
-            border-bottom: 3px solid #3498db; 
-            padding-bottom: 10px;
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
-        }
-        h2 { 
-            color: #34495e; 
-            margin-top: 30px;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-        }
-        h3 { 
-            color: #555;
-            font-size: clamp(1.25rem, 3.5vw, 1.75rem);
-        }
-        .warning {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            transition: background-color 0.3s ease;
-        }
-        .warning:hover {
-            background-color: #ffe69c;
-        }
-        .warning strong { color: #856404; }
-        .info {
-            background-color: #d1ecf1;
-            border-left: 4px solid #0c5460;
-            padding: 15px;
-            margin: 20px 0;
-            transition: background-color 0.3s ease;
-        }
-        .info:hover {
-            background-color: #bee5eb;
-        }
-        .info h5 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #0c5460;
-            font-size: 0.9em;
-        }
-        .info ul {
-            font-size: 0.8em;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            transition: background-color 0.2s ease;
-        }
-        code:hover {
-            background-color: #e8e8e8;
-        }
-        .code-wrapper {
-            position: relative;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        pre:hover {
-            background-color: #ebebeb;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
-        }
-        pre code {
-            background-color: transparent;
-            padding: 0;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-        }
-        pre code:hover {
-            background-color: transparent;
-        }
-        .copy-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        .copy-btn:hover {
-            opacity: 1;
-        }
-        .copy-btn.copied {
-            background-color: #27ae60;
-        }
-        ul { padding-left: 20px; }
-        li { margin: 8px 0; }
-        .log-output {
-            background-color: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            margin: 20px 0;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .log-output:hover {
-            background-color: #3a3a3a;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
-        }
-        .log-yellow {
-            color: #f1fa8c;
-        }
-        .log-info {
-            color: #8be9fd;
-        }
-        .log-green {
-            color: #50fa7b;
-        }
-        .log-blue {
-            color: #8be9fd;
-        }
-        .toc {
-            background-color: #f8f9fa;
-            border-left: 4px solid #3498db;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .toc h2 {
-            margin-top: 0;
-            font-size: 1.3em;
-        }
-        .toc ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .toc ul ul {
-            padding-left: 20px;
-        }
-        .toc ul ul ul {
-            padding-left: 40px;
-        }
-        .toc a {
-            text-decoration: none;
-            color: #2c3e50;
-        }
-        .toc a:hover {
-            color: #3498db;
-        }
-        
-        .side-note {
-            background-color: #f8f9fa;
-            border-left: 4px solid #6c757d;
-            padding: 12px 15px;
-            margin: 15px 0;
-            font-style: italic;
-            color: #495057;
-        }
-        
-        /* Mobile responsiveness */
-        @media screen and (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            .warning, .info, .toc, .side-note {
-                padding: 12px;
-            }
-            pre, .log-output {
-                padding: 10px;
-                font-size: 0.75rem;
-            }
-            .copy-btn {
-                font-size: 10px;
-                padding: 4px 8px;
-            }
-            .toc ul ul {
-                padding-left: 15px;
-            }
-            .toc ul ul ul {
-                padding-left: 30px;
-            }
-        }
-        
-        @media screen and (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            h1 {
-                border-bottom-width: 2px;
-            }
-            .warning, .info, .toc, .side-note {
-                padding: 10px;
-            }
-            pre, .log-output {
-                padding: 8px;
-                font-size: 0.7rem;
-            }
-            .copy-btn {
-                top: 3px;
-                right: 3px;
-                font-size: 9px;
-                padding: 3px 6px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="custom-style.css">
 </head>
 <body>
     <h1>Fancy FileServer</h1>
 
     <div class="toc">
-        <h2>Table of Contents</h2>
+        <h3>Table of Contents</h3>
         <ul>
             <li><a href="#introduction">Introduction</a>
+            </li>
+            <li><a href="#getting-started">Getting Started</a>
+                <ul>
+                    <li><a href="#fork-github-repository">Fork GitHub Repository</a>
+                    </li>
+                    <li><a href="#docker-pat">Create a Personal Access Token (PAT) for docker.hub</a>
+                    </li>
+                    <li><a href="#github-secrets-and-vars">Configure Your GitHub Secrets and Variables</a>
+                    </li>
+                </ul>
             </li>
             <li><a href="#instructions">Instructions</a>
                 <ul>
@@ -267,14 +53,122 @@
 
     Each task is designed to build practical skills in identifying vulnerabilities and implementing industry-standard security measures.
 
+    <h2 id="getting-started">Getting Started</h2>
+
+    <h3 id="fork-github-repository">Fork GitHub Repository</h3>
+
+    <ul>
+        <li>Open the <a href="https://github.com/ValentinTwin1206/docker-js-fullstack-learning-course" target="_blank">docker-js-fullstack-learning-course</a> repository on GitHub</li>
+        <li>Click the <em>Fork</em> button in the top-right corner</li>
+        <li>Rename the repository to <strong>fancy-fileserver-solution</strong> and click <em>Create fork</em></li>
+    </ul>
+    <a href="fork_repo.png" target="_blank">
+        <img 
+            src="fork_repo.png"
+            alt="Fork Repository"
+            style="max-width: 80%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+    </a>
+
+    <h3 id="docker-pat">Create a Personal Access Token (PAT) for docker.hub</h3>
+    
+    <ul>
+        <li>Navigate to the <a href="https://login.docker.com/u/login" target="_blank">login page</a> docker.hub</li>
+        <li>Log in with your existing credentials or click <em>Sign Up</em> to create a new Personal Account</li>
+        <li>Locate your user avatar on the top-right and navigate to your <em>Account Settings</em></li>
+        <li>Locate <em>Personal access tokens</em> on the left-side navigation menu and click <em>Generate new token</em></li>
+        <li>Specify a custom description, an expiration date and give it <em>Read, Write, Delete</em> permissions</li>
+        <a href="create_pat.png" target="_blank">
+            <img 
+                src="create_pat.png"
+                alt="Create Docker Hub Personal Access Token"
+                style="max-width: 80%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </a>
+    </ul>
+
+    <h3 id="github-secrets-and-vars">Configure Your GitHub Secrets and Variables</h3>
+
+    <ul>
+        <li>Navigate to your forked repository on GitHub and click on <em>Settings</em> in the repository navigation bar</li>
+        <li>In the left sidebar, expand <em>Secrets and variables</em> and click on <em>Actions</em></li>
+        <li>Use the <em>New repository secret</em> button to add following secrets</li>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Secret Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>APIKEY_JWT_SECRET</code></td>
+                    <td>JWT secret for API key authentication (use a secure random string)</td>
+                </tr>
+                <tr>
+                    <td><code>COOKIE_SECRET</code></td>
+                    <td>Secret for cookie encryption (use a secure random string)</td>
+                </tr>
+                <tr>
+                    <td><code>SYS_USER_FIRST</code></td>
+                    <td>Firstname for the system admin user</td>
+                </tr>
+                <tr>
+                    <td><code>SYS_USER_LAST</code></td>
+                    <td>Lastname for the system admin user</td>
+                </tr>
+                <tr>
+                    <td><code>SYS_USER_MAIL</code></td>
+                    <td>Email for the system admin user</td>
+                </tr>
+                <tr>
+                    <td><code>SYS_USER_PASS</code></td>
+                    <td>Password for the system admin user</td>
+                </tr>
+                <tr>
+                    <td><code>SYS_USER_USERNAME</code></td>
+                    <td>Username for the system admin</td>
+                </tr>
+                <tr>
+                    <td><code>TEST_USER_PASS</code></td>
+                    <td>Password for the test user (dev environment)</td>
+                </tr>
+                <tr>
+                    <td><code>DOCKER_PAT</code></td>
+                    <td>Docker Hub Personal Access Token (created in previous step)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <li>Switch to the <em>Variables</em> tab and use <em>New repository variable</em> to add following variables</li>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>DOCKER_USERNAME</code></td>
+                    <td>Your Docker Hub username</td>
+                </tr>
+                <tr>
+                    <td><code>DOCKER_REPOSITORY</code></td>
+                    <td>Docker Hub repository path (e.g., <code>yourusername/fancy-fileserver</code>)</td>
+                </tr>
+                <tr>
+                    <td><code>TEST_USER_USERNAME</code></td>
+                    <td>Username for the test user (e.g., <code>testuser</code>)</td>
+                </tr>
+            </tbody>
+        </table>
+    </ul>
+
     <h2 id="instructions">Instructions</h2>
-
-    <h3 id="getting-started">Getting Started</h3>
-
-    Before you begin, fork the public repository <a href="https://github.com/ValentinTwin1206/docker-js-fullstack-learning-course" target="_blank">docker-js-fullstack-learning-course</a> 
-    to your own GitHub account.
-
+    
     <h3 id="feature-development">Feature Development</h3>
+
+    <h4>Problem Description</h4>
 
     <div>
         Start the Fancy FileServer project as described in the <code>README.md</code> file. Once started, open 
@@ -289,6 +183,7 @@
     </div>
 
     <h4>Exercise</h4>
+
     Your exercise is to capture additional demographic information by extending the User schema 
     to persist the sexuality of newly registered users:
     <ul>
@@ -319,9 +214,13 @@
 
     <h3 id="container-image-hardening">Container Image Hardening</h3>
 
-    To understand the security gaps and learn about container hardening, use 
+    <h4>Problem Description</h4>
+
+    The current <code>Dockerfile</code> and <code>docker-compose.yml</code> configurations contain several security weaknesses that could expose the application to potential vulnerabilities.
+    To gain a first impression of container hardening techniques, we will use 
     <a href="https://github.com/docker/docker-bench-security" target="_blank">Docker Bench for Security</a>. 
-    This tool provides excellent awareness of container security fundamentals and common misconfigurations. 
+    This tool provides excellent awareness of container security fundamentals and common misconfigurations.
+    <br><br>
     In professional production environments, security tooling is more comprehensive and typically includes:
     
     <ul>
@@ -385,6 +284,8 @@ cd docker-bench-security</code></pre>
     </div>
 
     <h3 id="api-hardening">API Hardening</h3>
+
+    <h4>Problem Description</h4>
 
     The application currently accepts weak passwords with only 6 characters minimum. 
     To identify this vulnerability through network reconnaissance, use penetration testing tools 
