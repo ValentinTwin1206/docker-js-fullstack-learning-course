@@ -28,14 +28,14 @@ jobs:
           cp sample.env-dev .env-dev
           
           # 2. Inject GH secrets
-          sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
-          sed -i "s|{REPLACE_WITH_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-dev
-          sed -i "s|{REPLACE_WITH_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-dev
-          sed -i "s|{REPLACE_WITH_TEST_PASSWORD}|${{ secrets.TEST_USER_PASS }}|g" .env-dev
+          sed -i "s|^APIKEY_JWT_SECRET=.*|APIKEY_JWT_SECRET=${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
+          sed -i "s|^COOKIE_SECRET=.*|COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}|g" .env-dev
+          sed -i "s|^SYS_USER_PASS=.*|SYS_USER_PASS=${{ secrets.SYS_USER_PASS }}|g" .env-dev
+          sed -i "s|^TEST_USER_PASS=.*|TEST_USER_PASS=${{ secrets.TEST_USER_PASS }}|g" .env-dev
           
           # 3. Inject GH variables
-          sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-dev
-          sed -i "s|{REPLACE_WITH_TEST_USERNAME}|${{ vars.TEST_USER_USERNAME }}|g" .env-dev
+          sed -i "s|^SYS_USER_USERNAME=.*|SYS_USER_USERNAME=${{ vars.SYS_USER_USERNAME }}|g" .env-dev
+          sed -i "s|^TEST_USER_USERNAME=.*|TEST_USER_USERNAME=${{ vars.TEST_USER_USERNAME }}|g" .env-dev
 
       - name: Prepare .env-prod from sample
         run: |
@@ -44,12 +44,12 @@ jobs:
           cp sample.env-prod .env-prod
 
           # 2. Inject GH secrets
-          sed -i "s|{REPLACE_WITH_JWT_SECRET}|${{ secrets.APIKEY_JWT_SECRET }}|g" .env-prod
-          sed -i "s|{REPLACE_WITH_COOKIE_SECRET}|${{ secrets.COOKIE_SECRET }}|g" .env-prod
-          sed -i "s|{REPLACE_WITH_SYS_PASSWORD}|${{ secrets.SYS_USER_PASS }}|g" .env-prod
+          sed -i "s|^APIKEY_JWT_SECRET=.*|APIKEY_JWT_SECRET=${{ secrets.APIKEY_JWT_SECRET }}|g" .env-prod
+          sed -i "s|^COOKIE_SECRET=.*|COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}|g" .env-prod
+          sed -i "s|^SYS_USER_PASS=.*|SYS_USER_PASS=${{ secrets.SYS_USER_PASS }}|g" .env-prod
           
           # 3. Inject GH variables
-          sed -i "s|{REPLACE_WITH_SYS_USERNAME}|${{ vars.SYS_USER_USERNAME }}|g" .env-prod
+          sed -i "s|^SYS_USER_USERNAME=.*|SYS_USER_USERNAME=${{ vars.SYS_USER_USERNAME }}|g" .env-prod
 
       - name: Build and Run DevContainer Task
         uses: devcontainers/ci@v0.3
