@@ -24,32 +24,37 @@ jobs:
       - name: Prepare .env-dev from sample
         run: |
 
-          # 1. Rename the sample file
+          # 1. Copy the sample file
           cp sample.env-dev .env-dev
           
-          # 2. Inject GH secrets
+          # 2. Replace placeholders with GH secrets
           sed -i "s|^APIKEY_JWT_SECRET=.*|APIKEY_JWT_SECRET=${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
           sed -i "s|^COOKIE_SECRET=.*|COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}|g" .env-dev
+
+          sed -i "s|^SYS_USER_FIRST=.*|SYS_USER_FIRST=${{ secrets.SYS_USER_FIRST }}|g" .env-dev
+          sed -i "s|^SYS_USER_LAST=.*|SYS_USER_LAST=${{ secrets.SYS_USER_LAST }}|g" .env-dev
+          sed -i "s|^SYS_USER_MAIL=.*|SYS_USER_MAIL=${{ secrets.SYS_USER_MAIL }}|g" .env-dev
           sed -i "s|^SYS_USER_PASS=.*|SYS_USER_PASS=${{ secrets.SYS_USER_PASS }}|g" .env-dev
+
           sed -i "s|^TEST_USER_PASS=.*|TEST_USER_PASS=${{ secrets.TEST_USER_PASS }}|g" .env-dev
           
-          # 3. Inject GH variables
-          sed -i "s|^SYS_USER_USERNAME=.*|SYS_USER_USERNAME=${{ vars.SYS_USER_USERNAME }}|g" .env-dev
-          sed -i "s|^TEST_USER_USERNAME=.*|TEST_USER_USERNAME=${{ vars.TEST_USER_USERNAME }}|g" .env-dev
+          # 3. Replace placeholders with GH variables
+          sed -i "s|^TEST_USER_USERNAME=.*|TEST_USER_USERNAME=${{ secrets.TEST_USER_USERNAME }}|g" .env-dev
+
 
       - name: Prepare .env-prod from sample
         run: |
 
-          # 1. Rename the sample file
+          # 1. Copy the sample file
           cp sample.env-prod .env-prod
 
-          # 2. Inject GH secrets
-          sed -i "s|^APIKEY_JWT_SECRET=.*|APIKEY_JWT_SECRET=${{ secrets.APIKEY_JWT_SECRET }}|g" .env-prod
-          sed -i "s|^COOKIE_SECRET=.*|COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}|g" .env-prod
-          sed -i "s|^SYS_USER_PASS=.*|SYS_USER_PASS=${{ secrets.SYS_USER_PASS }}|g" .env-prod
-          
-          # 3. Inject GH variables
-          sed -i "s|^SYS_USER_USERNAME=.*|SYS_USER_USERNAME=${{ vars.SYS_USER_USERNAME }}|g" .env-prod
+          # 2. Replace placeholders with GH secrets
+          sed -i "s|^APIKEY_JWT_SECRET=.*|APIKEY_JWT_SECRET=${{ secrets.APIKEY_JWT_SECRET }}|g" .env-dev
+          sed -i "s|^COOKIE_SECRET=.*|COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}|g" .env-dev
+          sed -i "s|^SYS_USER_FIRST=.*|SYS_USER_FIRST=${{ secrets.SYS_USER_FIRST }}|g" .env-dev
+          sed -i "s|^SYS_USER_LAST=.*|SYS_USER_LAST=${{ secrets.SYS_USER_LAST }}|g" .env-dev
+          sed -i "s|^SYS_USER_MAIL=.*|SYS_USER_MAIL=${{ secrets.SYS_USER_MAIL }}|g" .env-dev
+          sed -i "s|^SYS_USER_PASS=.*|SYS_USER_PASS=${{ secrets.SYS_USER_PASS }}|g" .env-dev
 
       - name: Build and Run DevContainer Task
         uses: devcontainers/ci@v0.3
