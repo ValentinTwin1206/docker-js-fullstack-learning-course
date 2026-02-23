@@ -1,8 +1,24 @@
 import { defineConfig } from '@playwright/test';
 import path from 'path';
+import { lookup } from 'dns/promises';
 
 const ARTIFACTS_DIR = path.resolve(process.env.TEST_RESULTS_DIR || '.test');
 const TEST_DIR = path.resolve(`${process.env.TEST_ROOT_DIR}/e2e/gui` || './tests/e2e/gui');
+
+// Resolve the server hostname to an IP address so that all browsers
+// (including Chromium, which cannot resolve Docker-internal DNS names)
+// can reach the app container.
+const serverURL  = `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`;
+const hostname   = new URL(serverURL).hostname;
+const port       = new URL(serverURL).port;
+
+let baseURL = serverURL;
+try {
+  const { address } = await lookup(hostname);
+  baseURL = `http://${address}:${port}`;
+} catch {
+  // Lookup failed — fall back to the original SERVER_URL (e.g. localhost)
+}
 
 export default defineConfig({
   testDir: TEST_DIR,
@@ -18,7 +34,7 @@ export default defineConfig({
     }]
   ],
   use: {
-    baseURL: `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`,
+    baseURL,
     headless: process.env.HEADED !== 'true',
     viewport: { 
       width: 1280,
