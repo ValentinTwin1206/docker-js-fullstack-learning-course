@@ -92,7 +92,8 @@ test.describe('User registration flow', () => {
     // Click confirm button with retry logic
     const confirmButton = page.locator('.swal2-confirm');
     await confirmButton.waitFor({ state: 'visible' });
-    
+    await page.waitForTimeout(500); // Allow SweetAlert2 animation to settle (WebKit)
+
     for (let i = 0; i < 3; i++) {
       try {
         await confirmButton.click({ timeout: 5000 });
