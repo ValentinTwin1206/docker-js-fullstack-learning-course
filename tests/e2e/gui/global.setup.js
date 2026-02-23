@@ -1,5 +1,4 @@
 import config from '../../../playwright.config.js';
-import { lookup } from 'dns/promises';
 import { 
   getTestUserData,
   generateApiKey
@@ -13,36 +12,22 @@ export default async function globalSetup() {
   
   // local variables
   const baseURL     = config.use?.baseURL;
-  const hostname    = new URL(baseURL).hostname;
-  const hostport    = new URL(baseURL).port;
   const delay       = 1000;
   const maxAttempts = 5;
   
-  let apiURL;
   let connected     = false;
 
 
   console.log(`[SETUP] Checking if '${process.env.SERVER_NAME}' is running at '${baseURL}'...`);
 
-  // Resolve DNS for the target server
-  try {
-    const { address } = await lookup(hostname);
-    apiURL = `http://${address}:${hostport}`;
-    console.log(`[SETUP] Resolved DNS name of '${hostname}' to '${address}'`);
-  } catch (error) {
-    console.warn(`[ERROR] DNS resolution failed: ${error.message}`);
-    apiURL = null;
-  }
-
-  // Wait for server to be ready - try baseURL first, then apiURL if it fails
+  // Wait for server to be ready
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const response = await fetch(`${baseURL}/healthcheck`);
       
       if (response.ok) {
         connected = true;
-        console.log(`[SETUP] Server responded with '${response.status}' via baseURL`);
-        apiURL = baseURL; // Use baseURL since it works
+        console.log(`[SETUP] Server responded with '${response.status}'`);
         break;
       }
       else {
@@ -50,21 +35,6 @@ export default async function globalSetup() {
       }
     } 
     catch (error) {
-      // If baseURL fails and we have an apiURL, try that
-      if (apiURL && attempt === maxAttempts) {
-        try {
-          console.log(`[SETUP] Trying apiURL fallback...`);
-          const response = await fetch(`${apiURL}/healthcheck`);
-          if (response.ok) {
-            connected = true;
-            console.log(`[SETUP] Server responded with '${response.status}' via apiURL`);
-            break;
-          }
-        } catch (apiError) {
-          console.log(`[SETUP] API URL also failed: ${apiError.message}`);
-        }
-      }
-      
       console.log(`[SETUP] Waiting for server... (attempt ${attempt}/${maxAttempts})`);
       
       if (attempt < maxAttempts)
@@ -103,7 +73,7 @@ export default async function globalSetup() {
     
     // Register user via REST API
     console.log(`[SETUP] Trying to register '${testUser.firstname} ${testUser.lastname}'...`);
-    const response = await fetch(`${apiURL}/api/v1/users`, {
+    const response = await fetch(`${baseURL}/api/v1/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
