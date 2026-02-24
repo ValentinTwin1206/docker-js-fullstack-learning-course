@@ -110,7 +110,7 @@ test.describe('User registration flow', () => {
     const loginUsernameInput = page.locator('#loginForm input[name="username"]');
     await expect(loginUsernameInput).toHaveValue(username, { timeout: 10000 });
     
-    console.log(`✅ Registered '${testUser.firstname} ${testUser.lastname}' as '${username}'`);
+    //console.log(`✅ Registered '${testUser.firstname} ${testUser.lastname}' as '${username}'`);
   });
 
   /**
@@ -119,7 +119,7 @@ test.describe('User registration flow', () => {
   test('should fail to register a user with invalid firstname', async ({ page }) => {
     const invalidUser = await getTestUserData('invalidFirstname');
     await registerUserWithFailure(page, invalidUser);
-    console.log(`✅ Registration rejected since firstname '${invalidUser.firstname}' contains numbers`);
+    //console.log(`✅ Registration rejected since firstname '${invalidUser.firstname}' contains numbers`);
   });
 
   /**
@@ -137,7 +137,7 @@ test.describe('User registration flow', () => {
   test('should fail to register a user with invalid lastname', async ({ page }) => {
     const invalidUser = await getTestUserData('invalidLastname');
     await registerUserWithFailure(page, invalidUser);
-    console.log(`✅ Registration rejected since lastname '${invalidUser.lastname}' contains special characters`);
+    //console.log(`✅ Registration rejected since lastname '${invalidUser.lastname}' contains special characters`);
   });
 
   /**
@@ -146,7 +146,7 @@ test.describe('User registration flow', () => {
   test('should fail to register a user with invalid email', async ({ page }) => {
     const invalidUser = await getTestUserData('invalidEmail');
     await registerUserWithFailure(page, invalidUser);
-    console.log(`✅ Registration rejected since email '${invalidUser.email}' is not valid format`);
+    //console.log(`✅ Registration rejected since email '${invalidUser.email}' is not valid format`);
   });
 
   /**
@@ -155,7 +155,7 @@ test.describe('User registration flow', () => {
   test('should fail to register a user with short password', async ({ page }) => {
     const invalidUser = await getTestUserData('shortPassword');
     await registerUserWithFailure(page, invalidUser);
-    console.log(`✅ Registration rejected since password '${invalidUser.password}' is too short (${invalidUser.password.length} chars)`);
+    //console.log(`✅ Registration rejected since password '${invalidUser.password}' is too short (${invalidUser.password.length} chars)`);
   });
 
 });

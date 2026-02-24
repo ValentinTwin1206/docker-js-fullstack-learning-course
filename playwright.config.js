@@ -18,7 +18,7 @@ export default defineConfig({
     }]
   ],
   use: {
-    baseURL: `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`,
+    baseURL: `http://${process.env.SERVER_IP}:${process.env.SERVER_PORT}`,
     headless: process.env.HEADED !== 'true',
     viewport: { 
       width: 1280,

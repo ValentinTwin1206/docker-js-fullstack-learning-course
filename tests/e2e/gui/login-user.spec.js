@@ -38,7 +38,7 @@ test.describe('User login flow', () => {
     // Verify welcome message with username is displayed
     await expect(page.locator('h1')).toContainText(`Welcome ${registeredUser.username}`);
     
-    console.log(`✅ Logged in user '${registeredUser.username}' successfully.`);
+    //console.log(`✅ Logged in user '${registeredUser.username}' successfully.`);
   });
 
 
@@ -52,7 +52,7 @@ test.describe('User login flow', () => {
       'WrongPassword123!'
     );
     
-    console.log(`✅ Login rejected since user '${registeredUser.username}' used incorrect password`);
+    //console.log(`✅ Login rejected since user '${registeredUser.username}' used incorrect password`);
   });
 
 
@@ -69,6 +69,6 @@ test.describe('User login flow', () => {
       'AnyPassword123!'
     );
     
-    console.log(`✅ Login rejected since user '${unknownUsername}' does not exist`);
+    //console.log(`✅ Login rejected since user '${unknownUsername}' does not exist`);
   });
 });
