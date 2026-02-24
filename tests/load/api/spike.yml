@@ -4,7 +4,7 @@
 # Usage: artillery run tests/load/api/spike.yml
 
 config:
-  target: "{{ $env.SERVER_URL }}:{{ $env.SERVER_PORT }}"
+  target: "http://{{ $env.SERVER_IP }}:{{ $env.SERVER_PORT }}"
 
   # Phases - load appropriate .env-{MATURITY} file before running
   phases:

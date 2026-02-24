@@ -4,7 +4,7 @@
 # Usage: artillery run tests/load/api/smoke.yml
 
 config:
-  target: "{{ $env.SERVER_URL }}:{{ $env.SERVER_PORT }}"
+  target: "http://{{ $env.SERVER_IP }}:{{ $env.SERVER_PORT }}"
   
   phases:
     - duration: 60
