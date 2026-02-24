@@ -1,8 +1,22 @@
 import { defineConfig } from '@playwright/test';
 import path from 'path';
+import { lookup } from 'dns/promises';
 
 const ARTIFACTS_DIR = path.resolve(process.env.TEST_RESULTS_DIR || '.test');
 const TEST_DIR = path.resolve(`${process.env.TEST_ROOT_DIR}/e2e/gui` || './tests/e2e/gui');
+
+const serverURL  = `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`;
+const hostname   = new URL(serverURL).hostname;
+const port       = new URL(serverURL).port;
+let baseURL = serverURL;
+try {
+  // Resolve the server hostname (app) to its IP address to avoid any DNS timeout 
+  // error in the CICD environment.
+  const { address } = await lookup(hostname);
+  baseURL = `http://${address}:${port}`;
+} catch {
+  // Lookup failed — fall back to the original SERVER_URL (e.g. localhost)
+}
 
 export default defineConfig({
   testDir: TEST_DIR,
