@@ -11,7 +11,8 @@ services:
     ports:
       - "9323:9323"
     networks:
-      - fancy_fileserver
+      fancy_fileserver:
+        ipv4_address: ${DEVCONTAINER_IP:-172.20.0.5}
     depends_on:
       mongo:
         condition: service_healthy
@@ -28,6 +29,9 @@ services:
     container_name: fancy_fileserver_dev
     env_file:
       - .env-dev
+    networks:
+      fancy_fileserver:
+        ipv4_address: ${SERVER_IP:-172.20.0.10}
     depends_on:
       mongo:
         condition: service_healthy
@@ -38,8 +42,6 @@ services:
     profiles: ["dev"]
     volumes:
       - ./src:/app/src
-    networks:
-      - fancy_fileserver
 
   app_prod:
     build:
@@ -58,7 +60,8 @@ services:
       - "3000:3000"
     profiles: ["prod"]
     networks:
-      - fancy_fileserver
+      fancy_fileserver:
+        ipv4_address: ${SERVER_IP:-172.20.0.10}
 
   mongo:
     image: mongo:7.0
@@ -69,7 +72,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - fancy_fileserver
+      fancy_fileserver:
+        ipv4_address: ${MONGO_IP:-172.20.0.20}
 
   redis:
     image: redis:7.2
@@ -80,10 +84,14 @@ services:
       timeout: 3s
       retries: 5
     networks:
-      - fancy_fileserver
+      fancy_fileserver:
+        ipv4_address: ${REDIS_IP:-172.20.0.30}
 
 networks:
   fancy_fileserver:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
 
 volumes:
   mongo_data:
