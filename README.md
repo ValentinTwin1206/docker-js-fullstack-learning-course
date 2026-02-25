@@ -22,26 +22,18 @@ The project provides a full-stack web application built with BunJS and FastifyJS
 
 This project serves as a practical example for implementing CI/CD pipelines, containerization, testing strategies, and DevOps workflows.
 
-## System Requirements
-
-### macOS
-
-- Visual Studio Code 1.106.1
-- VSCode Remote Development Extension
-- Docker Desktop 4.54.0
-
-### Windows
-
-- Windows 11 + WSL2 2.5.10
-- Visual Studio Code 1.106.1
-- VSCode Remote Development Extension
-- Docker Desktop 4.54.0
-
 ## User Guide
 
 Please read the [learning instructions](https://valentintwin1206.github.io/docker-js-fullstack-learning-course/).
 
 ## Development
+
+### System Requirements
+
+- IDE + DevContainer Integration
+  - e.g. Visual Studio Code 1.106.1
+  - e.g. VSCode Remote Development Extension
+- Docker Desktop 4.54.0
 
 ### Setup Locally
 
