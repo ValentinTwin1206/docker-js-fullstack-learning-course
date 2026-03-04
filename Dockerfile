@@ -15,8 +15,8 @@ RUN bun install --frozen-lockfile
 # DEV LAYER
 # # # # # # # # 
 FROM base AS dev
-COPY src ./src
-COPY src/public ./public
+COPY backend ./backend
+COPY backend/public ./public
 
 RUN echo "Dev Target: Checking tool availability..." && \
     bun --version
@@ -30,8 +30,8 @@ CMD ["bun", "run", "start:dev"]
 # # # # # # # # 
 FROM base AS prod
 ENV NODE_ENV=production
-COPY src ./src
-COPY src/public ./public
+COPY backend ./backend
+COPY backend/public ./public
 
 EXPOSE 3000
 CMD ["bun", "run", "start"]

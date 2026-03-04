@@ -4,7 +4,7 @@
 # Usage: artillery run tests/load/gui/smoke.yml --config tests/load/gui/gui-flows.yml
 
 config:
-  target: "http://{{ $env.SERVER_IP }}:{{ $env.SERVER_PORT }}"
+  target: "http://{{ $env.FRONTEND_IP }}:{{ $env.FRONTEND_PORT }}"
   
   phases:
     - duration: 60

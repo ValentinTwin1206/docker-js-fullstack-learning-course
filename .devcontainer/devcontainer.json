@@ -5,6 +5,7 @@
   "workspaceFolder": "/workspace",
   "runServices": [
     "app",
+    "frontend",
     "dev_container",
     "mongo",
     "redis"
@@ -21,15 +22,20 @@
     }
   },
    "forwardPorts": [
-    9323
+    9323,
+    5173
   ],
   "portsAttributes": {
     "9323": {
       "label": "Metrics Port",
       "onAutoForward": "silent"
+    },
+    "5173": {
+      "label": "React Dev Server",
+      "onAutoForward": "openBrowser"
     }
   },
-  "postCreateCommand": "bun install",
+  "postCreateCommand": "rm -rf node_modules && bun install && cd frontend && rm -rf node_modules && bun install",
   "remoteUser": "node",
   "overrideCommand": false
 }

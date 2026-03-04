@@ -1,0 +1,172 @@
+:root {
+  /* Blue color palette */
+  --blue-100: #e6f0ff;
+  --blue-200: #cce0ff;
+  --blue-300: #99c2ff;
+  --blue-400: #66a3ff;
+  --blue-500: #3385ff;
+  --blue-600: #0066ff; /* Primary */
+  --blue-700: #0052cc;
+  --blue-800: #003d99;
+  --blue-900: #002966;
+
+  /* Override Bootstrap theme colors */
+  --bs-primary: var(--blue-600);
+  --bs-primary-rgb: 0, 102, 255;
+
+  --bs-secondary: var(--blue-400);
+  --bs-secondary-rgb: 102, 163, 255;
+
+  --bs-info: var(--blue-500);
+  --bs-info-rgb: 51, 133, 255;
+
+  --bs-success: var(--blue-700);
+  --bs-success-rgb: 0, 82, 204;
+}
+
+/* ===============================
+   Navbar
+   =============================== */
+.navbar-dark.bg-dark {
+  background-color: var(--blue-800) !important;
+}
+
+/* ===============================
+   Buttons
+   =============================== */
+.btn-primary {
+  background-color: var(--blue-600);
+  border-color: var(--blue-600);
+}
+.btn-primary:hover {
+  background-color: var(--blue-700);
+  border-color: var(--blue-700);
+}
+
+.btn-info {
+  background-color: var(--blue-500);
+  border-color: var(--blue-500);
+}
+.btn-info:hover {
+  background-color: var(--blue-600);
+  border-color: var(--blue-600);
+}
+
+.btn-lightgray {
+  background-color: #e0e0e0;
+  color: #000;
+  border: 1px solid #ccc;
+}
+.btn-lightgray:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-lightred {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c2c7;
+}
+.btn-lightred:hover {
+  background-color: #f5c2c7;
+  color: #721c24;
+}
+
+/* ===============================
+   Badges
+   =============================== */
+.badge.bg-secondary {
+  background-color: var(--blue-400) !important;
+}
+.badge.bg-success {
+  background-color: var(--blue-700) !important;
+}
+
+/* ===============================
+   Tables
+   =============================== */
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: var(--blue-100);
+}
+
+/* ===============================
+   Modals
+   =============================== */
+.modal-header {
+  background-color: var(--blue-600);
+  color: #fff;
+  border-bottom: 1px solid var(--blue-700);
+}
+.modal-footer {
+  border-top: 1px solid var(--blue-200);
+}
+
+/* ===============================
+   Pagination (tui-pagination)
+   =============================== */
+
+/* Pagination container */
+#pagination.tui-pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* Pagination list */
+#pagination.tui-pagination ul {
+  display: flex !important;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Pagination items */
+#pagination.tui-pagination li {
+  margin: 0 0.25rem;
+}
+
+/* Pagination buttons */
+#pagination.tui-pagination li a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  background-color: #f8f9fa;
+  border: 1px solid var(--blue-300);
+  border-radius: 0.25rem;
+  color: var(--blue-600);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+#pagination.tui-pagination li a:hover {
+  background-color: #e9ecef;
+  border-color: var(--blue-400);
+}
+
+/* Selected page */
+#pagination.tui-pagination li.tui-is-selected a {
+  background-color: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #fff;
+}
+#pagination.tui-pagination li.tui-is-selected a:hover {
+  background-color: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #fff;
+}
+
+/* Disabled buttons (prev/next) */
+#pagination.tui-pagination li.tui-is-disabled a {
+  background-color: #f0f0f0;
+  color: #aaa;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   Sidebar Menu
+   =============================== */
+.list-group-item-action.active {
+  background-color: #e9f2ff !important;
+  border-color: #e9f2ff !important;
+  color: #05c !important;
+}

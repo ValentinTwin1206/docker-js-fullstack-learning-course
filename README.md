@@ -9,9 +9,10 @@ The project provides a full-stack web application built with BunJS and FastifyJS
 - **File Upload & Management**: Users can upload and manage files through a comprehensive web interface
 - **Data Storage**: MongoDB with GridFS for scalable file storage
 - **Caching Layer**: Redis for improved performance and session management
-- **User Interface**: HandlebarsJS-based UI with dedicated pages for:
+- **User Interface**: React SPA powered by Vite, with dedicated pages for:
   - File management
   - User administration (Admin only)
+  - Statistics dashboard (Admin only)
   - JWT token generation and management
 - **Authentication & Authorization**: Role-based access control with JWT tokens
 - **Test Data Generation**: FakerJS for seeding fake data to the server and database in development mode
@@ -51,7 +52,7 @@ Please read the [learning instructions](https://valentintwin1206.github.io/docke
 
 - Wait for the containers to build and start (this may take several minutes on first run due to Playwright browser binaries installation)
 - Once ready, you'll have a fully configured development environment with all dependencies installed
-- Open any Web browser and navigate to `http://127.0.0.1:3000/home`
+- Open any Web browser and navigate to `http://127.0.0.1:5173/home`
 
 #### Use Docker Compose
 
@@ -68,13 +69,23 @@ Please read the [learning instructions](https://valentintwin1206.github.io/docke
   docker exec -it ffs_devcontainer /bin/bash
   ```
 
-- Open any Web browser and navigate to `http://127.0.0.1:3000/home`
+- Open any Web browser and navigate to `http://127.0.0.1:5173/home`
 
-**Note**: This runs the same DevContainer environment but without VS Code integration. All services (app, MongoDB, Redis) will start together.
+**Note**: This runs the same DevContainer environment but without VS Code integration. All services (app, frontend, MongoDB, Redis) will start together. The React frontend runs on port `5173` (Vite dev server) and proxies API requests to the backend on port `3000`.
 
 ### Run Tests
 
-> All tests should be executed from within the DevContainer environment. Make sure the application is running before executing tests.
+> All tests should be executed from within the DevContainer environment. Make sure both the backend and frontend applications are running before executing tests.
+
+Start the applications in two separate terminals:
+
+```bash
+# Terminal 1 — Backend (port 3000)
+bun run start:dev
+
+# Terminal 2 — Frontend (port 5173)
+cd frontend && bun run dev
+```
 
 #### End-to-End API Tests (BATS)
 

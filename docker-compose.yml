@@ -41,7 +41,26 @@ services:
       - "3000:3000"
     profiles: ["dev"]
     volumes:
-      - ./src:/app/src
+      - ./backend:/app/backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: dev
+    container_name: fancy_fileserver_frontend_dev
+    environment:
+      - VITE_BACKEND_URL=http://app:3000
+    networks:
+      fancy_fileserver:
+        ipv4_address: ${FRONTEND_IP:-172.20.0.15}
+    depends_on:
+      - app
+    ports:
+      - "5173:5173"
+    profiles: ["dev"]
+    volumes:
+      - ./frontend/src:/app/src
 
   app_prod:
     build:
@@ -64,7 +83,7 @@ services:
         ipv4_address: ${SERVER_IP:-172.20.0.10}
 
   mongo:
-    image: mongo:7.0
+    image: jfrog.hub.vwgroup.com/remote-docker-io/mongo:7.0
     container_name: mongodb
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
@@ -76,7 +95,7 @@ services:
         ipv4_address: ${MONGO_IP:-172.20.0.20}
 
   redis:
-    image: redis:7.2
+    image: jfrog.hub.vwgroup.com/remote-docker-io/redis:7.2
     container_name: redisdb
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]

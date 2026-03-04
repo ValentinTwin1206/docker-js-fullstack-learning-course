@@ -4,7 +4,7 @@
 # Usage: artillery run tests/load/gui/soak.yml --config tests/load/gui/gui-flows.yml
 
 config:
-  target: "http://{{ $env.SERVER_IP }}:{{ $env.SERVER_PORT }}"
+  target: "http://{{ $env.FRONTEND_IP }}:{{ $env.FRONTEND_PORT }}"
   
   # Phases - load appropriate .env-{MATURITY} file before running
   phases:

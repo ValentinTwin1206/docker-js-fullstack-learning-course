@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "bun src/config/index.js",
-    "start:dev": "bun --watch src/config/index.js",
+    "start": "bun backend/config/index.js",
+    "start:dev": "bun --watch backend/config/index.js",
     "test:api": "bats tests/e2e/api --formatter tap --verbose-run",
     "test:gui": "bunx playwright test",
     "test:load:smoke:api": "bunx artillery run tests/load/api/smoke.yml --config tests/load/api/api-flows.yml",

@@ -2,6 +2,14 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:24-bookworm
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Optional: proxy support for apt-get and npm during build
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+ENV NO_PROXY=${NO_PROXY}
+
 # Set Playwright browsers path to shared location (outside node_modules)
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
@@ -29,6 +37,7 @@ RUN curl -fsSL https://bun.com/install | bash \
 # Install Playwright and Artillery globally
 RUN mkdir -p /ms-playwright \
     && npm install -g @playwright/test@1.58.0 \
+    && apt-get update \
     && npx playwright install --with-deps \
     && chown -R node:node /ms-playwright
 
