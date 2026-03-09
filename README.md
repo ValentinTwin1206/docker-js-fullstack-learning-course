@@ -81,7 +81,7 @@ Start the applications in two separate terminals:
 
 ```bash
 # Terminal 1 — Backend (port 3000)
-bun run start:dev
+cd backend && bun run start:dev
 
 # Terminal 2 — Frontend (port 5173)
 cd frontend && bun run dev
