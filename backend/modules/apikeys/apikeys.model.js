@@ -40,6 +40,5 @@ const apiKeySchema = new mongoose.Schema({
 // Compound unique index: username can have multiple keys, but tokenName + username 
 // must be unique
 apiKeySchema.index({ username: 1, tokenName: 1 }, { unique: true });
-apiKeySchema.index({ tokenHash: 1 });
 
 export default mongoose.model("ApiKey", apiKeySchema);

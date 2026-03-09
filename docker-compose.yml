@@ -23,7 +23,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
       target: dev
     container_name: fancy_fileserver_dev
@@ -41,12 +41,12 @@ services:
       - "3000:3000"
     profiles: ["dev"]
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app/backend:cached
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./frontend
+      dockerfile: Dockerfile
       target: dev
     container_name: fancy_fileserver_frontend_dev
     environment:
@@ -64,7 +64,7 @@ services:
 
   app_prod:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
       target: prod
     container_name: fancy_fileserver_prod

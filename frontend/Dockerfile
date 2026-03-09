@@ -5,10 +5,10 @@
 FROM oven/bun:1 AS dev
 WORKDIR /app
 
-COPY frontend/package.json frontend/bun.lockb* ./
+COPY package.json bun.lockb* ./
 RUN bun install --frozen-lockfile || bun install
 
-COPY frontend/ ./
+COPY . .
 
 EXPOSE 5173
 CMD ["bun", "run", "dev"]
@@ -21,8 +21,8 @@ CMD ["bun", "run", "dev"]
 FROM oven/bun:1 AS build
 WORKDIR /app
 
-COPY frontend/package.json frontend/bun.lockb* ./
+COPY package.json bun.lockb* ./
 RUN bun install --frozen-lockfile || bun install
 
-COPY frontend/ ./
+COPY . .
 RUN bun run build

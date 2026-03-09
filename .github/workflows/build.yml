@@ -103,8 +103,8 @@ jobs:
         if: ${{ inputs.upload_container }}
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: |
             ${{ vars.DOCKER_REPOSITORY }}:${{ inputs.container_tag }}

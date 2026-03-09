@@ -78,6 +78,7 @@ const apiStatisticsSchema = new mongoose.Schema({
 },
 { 
   timestamps: true,
+  suppressReservedKeysWarning: true,
   toJSON: { 
     virtuals: true 
   },
