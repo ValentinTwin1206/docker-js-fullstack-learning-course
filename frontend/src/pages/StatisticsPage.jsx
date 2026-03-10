@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import toast                   from 'react-hot-toast';
 
-import Navbar from '../components/Navbar';
-import Sidemenu from '../components/Sidemenu';
-import UserGrowthChart from '../components/statistics/UserGrowthChart';
-import RequestVolumeChart from '../components/statistics/RequestVolumeChart';
-import ResponseTimeChart from '../components/statistics/ResponseTimeChart';
-import TopRoutesTable from '../components/statistics/TopRoutesTable';
+import Navbar                              from '../components/Navbar';
+import Sidemenu                            from '../components/Sidemenu';
+import UserGrowthChart                     from '../components/statistics/UserGrowthChart';
+import RequestVolumeChart                  from '../components/statistics/RequestVolumeChart';
+import ResponseTimeChart                   from '../components/statistics/ResponseTimeChart';
+import TopRoutesTable                      from '../components/statistics/TopRoutesTable';
 import { getUserGrowth, getApiStatistics } from '../api/statistics';
 
 /**

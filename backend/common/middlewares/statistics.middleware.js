@@ -45,6 +45,7 @@ export const growthTrackingHook = async (request, reply) => {
         app.log.warn('Could not update user-growth')
         app.log.error(err.message)
     });
+    app.influx.writeUserGrowth('registration');
     app.log.info("Successfully updated user growth for 'registration' event")
     return;
   }
@@ -56,6 +57,7 @@ export const growthTrackingHook = async (request, reply) => {
         app.log.warn('Could not update user-growth')
         app.log.error(err.message)
     });
+    app.influx.writeUserGrowth('deletion');
     app.log.info("Successfully updated user growth for 'deletion' event")
     return;
   }
@@ -92,6 +94,18 @@ export const apiTrafficTrackingHook = async (request, reply) => {
       statusCode,
       latency
     });
+
+    try {
+      app.influx.writeApiRequest({
+        path: normalizedPath,
+        method,
+        statusCode,
+        latency
+      });
+    } catch (influxErr) {
+      app.log.warn('[InfluxDB] Could not queue api_requests point');
+      app.log.error(influxErr.message);
+    }
 
     app.log.debug(`Tracked API request: ${method} ${normalizedPath} - ${statusCode} (${latency}ms)`);
   } catch (err) {

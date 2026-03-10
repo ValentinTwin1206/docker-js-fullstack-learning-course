@@ -8,7 +8,9 @@
     "frontend",
     "dev_container",
     "mongo",
-    "redis"
+    "redis",
+    "influxdb",
+    "grafana"
   ],
   "customizations": {
     "vscode": {
@@ -23,7 +25,9 @@
   },
    "forwardPorts": [
     9323,
-    5173
+    5173,
+    8086,
+    3001
   ],
   "portsAttributes": {
     "9323": {
@@ -33,6 +37,14 @@
     "5173": {
       "label": "React Dev Server",
       "onAutoForward": "openBrowser"
+    },
+    "8086": {
+      "label": "InfluxDB",
+      "onAutoForward": "silent"
+    },
+    "3001": {
+      "label": "Grafana",
+      "onAutoForward": "silent"
     }
   },
   "postCreateCommand": "rm -rf node_modules && bun install && cd backend && rm -rf node_modules && bun install && cd ../frontend && rm -rf node_modules && bun install",

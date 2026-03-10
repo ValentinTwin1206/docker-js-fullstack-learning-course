@@ -35,7 +35,9 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-      redis:        
+      redis:
+        condition: service_healthy
+      influxdb:
         condition: service_healthy
     ports:
       - "3000:3000"
@@ -82,6 +84,48 @@ services:
       fancy_fileserver:
         ipv4_address: ${SERVER_IP:-172.20.0.10}
 
+  influxdb:
+    image: jfrog.hub.vwgroup.com/remote-docker-io/influxdb:2.7
+    container_name: influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_ADMIN_USER:-admin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_ADMIN_PASSWORD:-admin1234}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-fancyfileserver}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-api_metrics}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-my-super-secret-token}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      fancy_fileserver:
+        ipv4_address: ${INFLUXDB_IP:-172.20.0.40}
+    ports:
+      - "8086:8086"
+    profiles: ["dev"]
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  grafana:
+    image: jfrog.hub.vwgroup.com/remote-docker-io/grafana/grafana:10.4.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin1234}
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      fancy_fileserver:
+        ipv4_address: ${GRAFANA_IP:-172.20.0.50}
+    ports:
+      - "3001:3000"
+    profiles: ["dev"]
+    volumes:
+      - grafana_data:/var/lib/grafana
+
   mongo:
     image: jfrog.hub.vwgroup.com/remote-docker-io/mongo:7.0
     container_name: mongodb
@@ -115,3 +159,5 @@ networks:
 volumes:
   mongo_data:
   redis_data:
+  influxdb_data:
+  grafana_data:

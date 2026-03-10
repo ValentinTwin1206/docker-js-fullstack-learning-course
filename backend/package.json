@@ -8,6 +8,7 @@
     "start:dev": "bun --watch config/index.js"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
     "@fastify/cookie": "^7.0.0",
     "@fastify/formbody": "^7.0.0",
     "@fastify/multipart": "^7.7.3",

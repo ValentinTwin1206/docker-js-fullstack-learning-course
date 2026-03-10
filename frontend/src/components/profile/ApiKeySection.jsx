@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import Swal from 'sweetalert2';
-import toast from 'react-hot-toast';
+import { useState }            from 'react';
+// import { Modal, Button, Form } from 'react-bootstrap';
+// import Swal                    from 'sweetalert2';
+import toast                   from 'react-hot-toast';
 
 import { createApiKey, deleteApiKey } from '../../api/apikeys';
-import CreateApiKeyModal from './CreateApiKeyModal';
-import ApiKeyCreatedModal from './ApiKeyCreatedModal';
+import CreateApiKeyModal              from './CreateApiKeyModal';
+import ApiKeyCreatedModal             from './ApiKeyCreatedModal';
 
 /**
  * ApiKeySection — lists API keys and lets the user create/delete them.
  * Replaces the #apiKeySection + inline script logic in profile.hbs.
  */
 export default function ApiKeySection({ username, apiKeys, onKeysChanged }) {
-  const [showCreate, setShowCreate] = useState(false);
+  const [showCreate, setShowCreate]     = useState(false);
   const [createdToken, setCreatedToken] = useState(null); // the raw JWT shown once
 
   // Create API key

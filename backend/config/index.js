@@ -20,6 +20,9 @@ import {
   setupDatabase 
 }  from './database.js';
 import { 
+  setupInflux 
+}   from './influx.js';
+import { 
   handleErrors 
 }   from '../common/middlewares/errorHandling.middleware.js';
 import {
@@ -72,6 +75,18 @@ try {
   app.log.debug('Cache setup completed successfully.');
 } catch (err) {
   app.log.error("Failed to setup cache");
+  app.log.error(err.message);
+  process.exit(1);
+}
+
+// ------------------------
+// Setup InfluxDB
+// ------------------------
+try {
+  app.log.info('Trying to setup InfluxDB.');
+  await setupInflux(app);
+} catch (err) {
+  app.log.error('Failed to setup InfluxDB');
   app.log.error(err.message);
   process.exit(1);
 }
