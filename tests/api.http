@@ -1,0 +1,101 @@
+### Variables
+@baseUrl = http://localhost:3000
+@adminUser = "admin"
+@adminPass = ""
+
+# ============================================================
+# AUTH
+# ============================================================
+
+### Login (Session-Cookie wird automatisch gespeichert)
+# @name login
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{adminUser}}",
+  "password": "{{adminPass}}"
+}
+
+###
+
+### Wer bin ich?
+GET {{baseUrl}}/api/v1/auth/me
+
+###
+
+### Logout
+GET {{baseUrl}}/api/v1/auth/logout
+
+###
+
+# ============================================================
+# USERS
+# ============================================================
+
+### User anlegen (PUBLIC – kein Login erforderlich)
+POST {{baseUrl}}/api/v1/users
+Content-Type: application/json
+
+{
+  "firstname": "Max",
+  "lastname": "Musterman",
+  "email": "max.mustermann6@example.com",
+  "password": "Test1234!"
+}
+
+###
+
+### Alle User abrufen (Admin-only)
+GET {{baseUrl}}/api/v1/users
+
+###
+
+### User paginiert abrufen (Admin-only)
+GET {{baseUrl}}/api/v1/user?page=1&limit=10
+
+###
+
+### Einzelnen User abrufen
+GET {{baseUrl}}/api/v1/users/admin
+
+###
+
+### User aktualisieren
+PATCH {{baseUrl}}/api/v1/users/admin
+Content-Type: application/json
+
+{
+  "firstname": "Julius",
+  "lastname": "Pravtchev"
+}
+
+###
+
+### User löschen (Sysadmin-only)
+DELETE {{baseUrl}}/api/v1/users/max1234
+
+###
+
+# ============================================================
+# STATISTICS
+# ============================================================
+
+### API Traffic Statistiken
+GET {{baseUrl}}/api/v1/statistics/traffic
+
+###
+
+### User Wachstum (Churn)
+GET {{baseUrl}}/api/v1/statistics/churn
+
+###
+
+# ============================================================
+# HEALTHCHECK
+# ============================================================
+
+### Healthcheck
+GET {{baseUrl}}/healthcheck
+
+###

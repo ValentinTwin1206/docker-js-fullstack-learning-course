@@ -47,7 +47,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "rm -rf node_modules && bun install && cd backend && rm -rf node_modules && bun install && cd ../frontend && rm -rf node_modules && bun install",
+  "postCreateCommand": "",
   "remoteUser": "node",
   "overrideCommand": false
 }

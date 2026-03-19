@@ -125,6 +125,7 @@ services:
     profiles: ["dev"]
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
 
   mongo:
     image: jfrog.hub.vwgroup.com/remote-docker-io/mongo:7.0
