@@ -1,10 +1,10 @@
 import { InfluxDB, Point } from '@influxdata/influxdb-client';
 
 // constants
-const INFLUX_URL    = process.env.INFLUXDB_URL    || 'http://localhost:8086';
-const INFLUX_TOKEN  = process.env.INFLUXDB_TOKEN  || 'my-super-secret-token';
-const INFLUX_ORG    = process.env.INFLUXDB_ORG    || 'fancyfileserver';
-const INFLUX_BUCKET = process.env.INFLUXDB_BUCKET || 'api_metrics';
+const INFLUX_URL    = process.env.INFLUXDB_URL;
+const INFLUX_TOKEN  = process.env.INFLUXDB_TOKEN;
+const INFLUX_ORG    = process.env.INFLUXDB_ORG;
+const INFLUX_BUCKET = process.env.INFLUXDB_BUCKET;
 
 let writeApi = null;
 

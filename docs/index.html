@@ -7,37 +7,52 @@
     <link rel="stylesheet" href="custom-style.css">
 </head>
 <body>
-    <h1>Fancy FileServer</h1>
+    <h1>1. Fancy FileServer</h1>
 
     <div class="toc">
-        <h3>Table of Contents</h3>
+        <h3>1.1 Table of Contents</h3>
         <ul>
-            <li><a href="#introduction">Introduction</a>
+            <li><a href="#introduction">2. Introduction</a>
             </li>
-            <li><a href="#getting-started">Getting Started</a>
+            <li><a href="#getting-started">3. Getting Started</a>
                 <ul>
-                    <li><a href="#fork-github-repository">Fork GitHub Repository</a>
+                    <li><a href="#fork-github-repository">3.1 Fork GitHub Repository</a>
                     </li>
-                    <li><a href="#docker-pat">Create a Personal Access Token (PAT) for docker.hub</a>
+                    <li><a href="#docker-pat">3.2 Create a Personal Access Token (PAT) for docker.hub</a>
                     </li>
-                    <li><a href="#github-secrets-and-vars">Configure Your GitHub Secrets and Variables</a>
+                    <li><a href="#github-secrets-and-vars">3.3 Configure Your GitHub Secrets and Variables</a>
                     </li>
                 </ul>
             </li>
-            <li><a href="#instructions">Instructions</a>
+            <li><a href="#instructions">4. Instructions</a>
                 <ul>
-                    <li><a href="#feature-development">Feature Development</a>
+                    <li><a href="#feature-development">4.1 Feature Development</a>
+                        <ul>
+                            <li><a href="#feature-development-problem-description">4.1.1 Problem Description</a></li>
+                            <li><a href="#extend-the-user-schema">4.1.2 Extend the user schema</a></li>
+                            <li><a href="#add-a-deletion-view">4.1.3 Add a deletion view to the react frontend</a></li>
+                        </ul>
                     </li>
-                    <li><a href="#container-image-hardening">Container Image Hardening</a>
+                    <li><a href="#container-image-hardening">4.2 Container Image Hardening</a>
                     </li>
-                    <li><a href="#api-hardening">API Hardening</a>
+                    <li><a href="#api-hardening">4.3 API Hardening</a></li>
+                    <li>
+                        <a href="#observability-and-monitoring">4.4 Observability &amp; Monitoring</a>
+                        <ul>
+                            <li><a href="#observability-and-monitoring-problem-description">4.4.1 Problem Description</a></li>
+                            <li><a href="#setup-influxdb">4.4.2 Setup InfluxDB</a></li>
+                            <li><a href="#write-data-to-influx">4.4.3 Write data to InfluxDB</a></li>
+                            <li><a href="#setup-grafana">4.4.4 Setup Grafana</a></li>
+                            <li><a href="#connect-influx-and-grafana">4.4.5 Connect InfluxDB with Grafana</a></li>
+                            <li><a href="#add-grafana-dashboard">4.4.6 Add the Grafana Dashboard</a></li>
+                        </ul>
                     </li>
                 </ul>
             </li>
         </ul>
     </div>
 
-    <h2 id="introduction">Introduction</h2>
+    <h2 id="introduction">2. Introduction</h2>
 
     The <strong>Fancy FileServer</strong> project is intentionally weakly designed to help developers learn about API and container security best practices by identifying and addressing common vulnerabilities. 
     This project is shipped with a streamlined architecture that provides a realistic foundation for learning security hardening techniques. 
@@ -53,9 +68,9 @@
 
     Each task is designed to build practical skills in identifying vulnerabilities and implementing industry-standard security measures.
 
-    <h2 id="getting-started">Getting Started</h2>
+    <h2 id="getting-started">3. Getting Started</h2>
 
-    <h3 id="fork-github-repository">Fork GitHub Repository</h3>
+    <h3 id="fork-github-repository">3.1 Fork GitHub Repository</h3>
 
     <ul>
         <li>Open the <a href="https://github.com/ValentinTwin1206/docker-js-fullstack-learning-course" target="_blank">docker-js-fullstack-learning-course</a> repository on GitHub</li>
@@ -69,7 +84,7 @@
             style="max-width: 80%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
     </a>
 
-    <h3 id="docker-pat">Create a Personal Access Token (PAT) for docker.hub</h3>
+    <h3 id="docker-pat">3.2 Create a Personal Access Token (PAT) for docker.hub</h3>
     
     <ul>
         <li>Navigate to the <a href="https://login.docker.com/u/login" target="_blank">login page</a> docker.hub</li>
@@ -85,7 +100,7 @@
         </a>
     </ul>
 
-    <h3 id="github-secrets-and-vars">Configure Your GitHub Secrets and Variables</h3>
+    <h3 id="github-secrets-and-vars">3.3 Configure Your GitHub Secrets and Variables</h3>
 
     <ul>
         <li>Navigate to your forked repository on GitHub and click on <em>Settings</em> in the repository navigation bar</li>
@@ -164,15 +179,15 @@
         </table>
     </ul>
 
-    <h2 id="instructions">Instructions</h2>
+    <h2 id="instructions">4. Instructions</h2>
     
-    <h3 id="feature-development">Feature Development</h3>
+    <h3 id="feature-development">4.1 Feature Development</h3>
 
-    <h4>Problem Description</h4>
+    <h4 id="feature-development-problem-description">4.1.1 Problem Description</h4>
 
     <div>
         Start the Fancy FileServer project as described in the <code>README.md</code> file. Once started, open 
-        a web browser and navigate to <a href="http://localhost:3000/login" target="_blank">http://localhost:3000/login</a> 
+        a web browser and navigate to <a href="http://localhost:5173/login" target="_blank">http://localhost:5173/login</a> 
         and click on the Register button to get the Registration form rendered.
     </div>
 
@@ -182,15 +197,13 @@
         </a>
     </div>
 
-    <h4>Exercise</h4>
+    <h4 id="extend-the-user-schema">4.1.2 Extend the user schema</h4>
 
     Your exercise is to capture additional demographic information by extending the User schema 
     to persist the sexuality of newly registered users:
-    <ul>
-        <li>Update Handlebars frontend</li>
-        <li>Update backend to persist "sexuality" in database</li>
-        <li>Update test modules and functions</li>
-    </ul>
+    <h5>4.1.2.1 Step 1: Update the react frontend</h5>
+    <h5>4.1.2.2 Step 2: Update backend to persist "sexuality" in database</h5>
+    <h5>4.1.2.3 Step 3: Update test modules and functions</h5>
 
     <div class="info">
         <h5 id="hint-1">HINTS</h5>
@@ -211,10 +224,16 @@
         </ul>
     </div>
 
+    <h4 id="add-a-deletion-view">4.1.3 Add a deletion view to the react frontend</h4>
+    Your exercise is to implement a user deletion view in the react frontend that allows users to delete their account. This feature should include a confirmation step to prevent accidental deletions and should be accessible from the user profile page.
+    <h5>4.1.3.1 Step 1: Update the react frontend to include a user deletion view</h5>
+    <h5>4.1.3.2 Step 2: Implement a confirmation step to prevent accidental deletions</h5>
+    <h5>4.1.3.3 Step 3: Make the deletion view accessible from the user profile page</h5>
+    <h5>4.1.3.4 Step 4: Extend the api and ui tests to verify your changes</h5>
 
-    <h3 id="container-image-hardening">Container Image Hardening</h3>
+    <h3 id="container-image-hardening">4.2 Container Image Hardening</h3>
 
-    <h4>Problem Description</h4>
+    <h4>4.2.1 Problem Description</h4>
 
     The current <code>Dockerfile</code> and <code>docker-compose.yml</code> configurations contain several security weaknesses that could expose the application to potential vulnerabilities.
     To gain a first impression of container hardening techniques, we will use 
@@ -261,7 +280,7 @@ cd docker-bench-security</code></pre>
         </div>
     </div>
 
-    <h4>Exercise</h4>
+    <h4>4.2.2 Exercise</h4>
     Your goal is to improve the security score by:
     <ul>
         <li>Harden the Dockerfile and Docker Compose configuration</li>
@@ -269,7 +288,7 @@ cd docker-bench-security</code></pre>
     </ul>
 
     <div class="info">
-        <h5 id="hint-2">HINTS</h5>
+        <h5 id="hint-2">4.2.3 HINTS</h5>
         <p>The following changes can help increase your Docker Bench Security score:</p>
         <ul>
             <li><code>Dockerfile</code> - Harden the container image configuration by specifying a non-privileged user</li>
@@ -283,9 +302,9 @@ cd docker-bench-security</code></pre>
         </ul>
     </div>
 
-    <h3 id="api-hardening">API Hardening</h3>
+    <h3 id="api-hardening">4.3 API Hardening</h3>
 
-    <h4>Problem Description</h4>
+    <h4>4.3.1 Problem Description</h4>
 
     The application currently accepts weak passwords with only 6 characters minimum. 
     To identify this vulnerability through network reconnaissance, use penetration testing tools 
@@ -402,7 +421,7 @@ cd docker-bench-security</code></pre>
         </div>
     </div>
 
-    <h4>Exercise</h4>
+    <h4>4.3.2 Exercise</h4>
     Your goal is to enforce strong password requirements by:
     <ul>
         <li>Implement frontend password validation</li>
@@ -410,7 +429,7 @@ cd docker-bench-security</code></pre>
     </ul>
 
     <div class="info">
-        <h5 id="hint-3">HINTS</h5>
+        <h5 id="hint-3">4.3.3 HINTS</h5>
         <ul>
             <li><code>login.hbs</code> - Implement password validation for the registration process</li>
             <li><code>package.json</code> - Integrate <a href="https://www.npmjs.com/package/validator" target="_blank"><code>validator</code></a> NPM library</li>
@@ -418,6 +437,458 @@ cd docker-bench-security</code></pre>
             <li><code>users.model.js</code> - Add <code>validate: { validator: isStrongPassword }</code> to the <code>password</code> field in <code>users.model.js</code></li>
         </ul>
     </div>
+
+    
+    <h3 id="observability-and-monitoring">4.4 Observability &amp; Monitoring</h3>
+    
+    <h4 id="observability-and-monitoring-problem-description">4.4.1 Problem Description</h4>
+        <p>
+            Real world applications require monitoring to observe performance and reliability. As an 
+            application administrator it is essential to have a monitoring solution in place to ensure the application is running smoothly 
+            and to quickly identify and resolve any issues that may arise.
+            </br></br>
+            Within this chapter you are going to extend the FancyFileServer application with a monitoring stack consisting of
+            <a href="https://www.influxdata.com/">InfluxDB</a> and <a href="https://grafana.com/">Grafana</a>. InfluxDB is a powerful time-series database that allows you to store and query metrics efficiently, while Grafana provides a user-friendly interface for visualizing and analyzing the collected data.
+            Both applications will be provided as OCI images and integrated into the existing Docker Compose setup. By the end of this chapter, you will have a fully functional monitoring stack that can be used to track the performance and health of your application in real-time.
+            It also helps you to gain experience in setting up and configuring monitoring tools, which is a crucial skill for any application administrator or DevOps engineer.
+        </p>
+
+        <p>
+            The following figure may help you to understand the architecture of the monitoring stack and how it integrates with the Fancy FileServer application in regards to the user growth. The frontend
+            application offers the user registration functionality on <em>/register</em> that requests the backend API on <em>/api/v1/users</em> to create a new user. The backend API then persists the new user in the MongoDB database and at the same time writes a metric within the <em>statistics.middleware.js</em> file to InfluxDB on our newly created <em>writeUserGrowth</em> function. Grafana is connected to InfluxDB as a data source and visualizes the user growth in a dashboard.
+        </p>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="architecture-influx-grafana.drawio.svg" target="_blank">
+                <img src="architecture-influx-grafana.drawio.svg" alt="InfluxDB and Grafana Integration" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+            </a>
+        </div>
+
+    <h4 id="setup-influxdb">4.4.2 Setup InfluxDB</h4>
+
+        <p>
+            In a first step we are going to set up InfluxDB as our time-series database for storing application metrics. Since we are going to provide InfluxDB
+            as an OCI image, we can easily integrate it into our existing <em>docker-compose.yaml</em> file.
+        </p>
+
+        <h5>4.4.2.1 Step 1: Docker Compose Configuration</h5>
+        <ul>
+            <li>Add a new service entry: <em>influxdb</em> within the <em>docker-compose.yaml</em></li>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>image</code></td>
+                        <td><code>influxdb:2.7</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>container_name</code></td>
+                        <td><code>influxdb</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>profiles</code></td>
+                        <td><code>["dev", "prod"]</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ports</code></td>
+                        <td><code>8086:8086</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>environment</code></td>
+                        <td>
+                            <ul>
+                                <li><code>DOCKER_INFLUXDB_INIT_MODE=setup</code></li>
+                                <li><code>DOCKER_INFLUXDB_INIT_USERNAME=&lt;your choice&gt;</code></li>
+                                <li><code>DOCKER_INFLUXDB_INIT_PASSWORD=&lt;your choice&gt;</code></li>
+                                <li><code>DOCKER_INFLUXDB_INIT_ORG=fancyfileserver</code></li>
+                                <li><code>DOCKER_INFLUXDB_INIT_BUCKET=api_metrics</code></li>
+                                <li><code>DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=&lt;your choice&gt;</code></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>ipv4_address</code></td>
+                        <td><code>172.20.0.40</code> (must be integrated in the <code>fancy_fileserver network</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>volumes</code></td>
+                        <td><code>influxdb_data:/var/lib/influxdb2</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </ul>
+        
+        <li>Add a service healthcheck for <em>influxdb</em> within the <em>docker-compose.yaml</em></li>
+        <pre><code>healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8086/ping"]
+    interval: 5s
+    timeout: 3s
+    retries: 10</code></pre>
+        <li>ensure, that <em>influxDB</em> is listed as a dependency for both apps (dev/prod) on bootstrap <em>(take a look how this is handled for other components)</em></li>
+
+        <li>finally, also add a <em>volume</em> entry for <em>influxdb_data</em> at the bottom of the <em>docker-compose.yaml</em> file. </li>
+        <pre><code>volumes:
+  mongo_data:
+  redis_data:
+  influxdb_data:</code></pre>
+        <h5>4.4.2.2 Step 2: Configure devcontainer.json & Verify InfluxDB</h5>
+
+        <p> 
+            Since we have prepared our <em>docker-compose.yml</em>, we need to slightly modify our <em>devcontainer.json</em> file to smoothly integrate InfluxDB into our setup.
+        </p>
+
+        <table>
+                <thead>
+                    <tr>
+                        <th>Variable Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>runServices</code></td>
+                        <td><code>influxdb</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>forwardPorts</code></td>
+                        <td><code>8086</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>portsAttributes</code></td>
+                        <td><code>
+                            "8086": {
+                                "label": "InfluxDB", 
+                                "onAutoForward": "silent"
+                            }</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <p>
+            Now everything is defined to spin up an InfluxDB instance within our Fancy FileServer ecosystem. Restart the entire Docker Compose setup to apply the changes.
+        </p>
+
+        <h5>4.4.2.3 Step 3: Verify InfluxDB</h5>
+        <p>
+            Once the compose setup is running, open your web browser at <a href="http://localhost:8086">http://localhost:8086</a>. The InfluxDB UI should appear.  
+            Use the USERNAME and PASSWORD from your environment variables to log in.<br>
+            If InfluxDB loads correctly and you can log in, your setup is complete and ready for further integration with Grafana or metric collection pipelines.
+        </p>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="influxdb_homescreen.png" target="_blank">
+                <img src="influxdb_homescreen.png" alt="InfluxDB Home Screen" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+            </a>
+        </div>
+
+        <h4 id="write-data-to-influx">4.4.3 Write data to InfluxDB</h4>
+
+        <p>
+            Now it is time to write some data into the InfluxDB. In the next step we want to integrate the InfluxDB client into the FancyFileServer with the overall goal to:
+            <ul>
+                <li>write API metrices to Influx - this could be the overall requests of our API or the latency response of the server</li>
+                <li>user statistics like the growth of users</li>
+            </ul>
+        </p>
+        <h5>4.4.3.1 Step 1: Install InfluxDB BunJS Client</h5>
+        <p>
+            At the very first beginning we need to install the InfluxDB BunJS client as described here <a href="https://docs.influxdata.com/influxdb/v2/api-guide/client-libraries/nodejs/install/">https://docs.influxdata.com/influxdb/v2/api-guide/client-libraries/nodejs/install/</a>.
+            </br></br>Add the client to your <em>package.json</em> file.
+            <pre><code>@influxdata/influxdb-client</code></pre>
+        </p>
+
+        <h5>4.4.3.2 Step 2: Implement the InfluxDB Client Instance</h5>
+        <p>
+            Now we need to implement the InfluxDB client instance in our application. To not start from scratch we have provided
+            a <em>influx.js</em> file in the <em>config</em> folder.
+            The file contains different <em>NOTE</em> instructions to guide you through the implementation. You can always refer to the official <a href="https://docs.influxdata.com/influxdb/v2/api-guide/client-libraries/nodejs/write/">documentation</a> for writing to InfluxDB.
+            
+            <ul>
+                <li>Add the missing variables with initial values <em>(they are provided through the docker-compose.yml file as environment variables)</em></li>
+                <pre><code>// e.g. this is how a variable is defined from the environment
+const INFLUX_URL = process.env.INFLUXDB_URL</code></pre>
+                <li>Use the <em><a href="https://docs.influxdata.com/influxdb/v2/reference/glossary/#point">Point()</a></em> constructor to create a point for the api requests. The following 
+                snippet shows how a point is created with a measurement name, a tag and a field. You can use this as a template for your implementation.</li>
+                <pre><code>const point1 = new Point('temperature')
+  .tag('sensor_id', 'TLM010')
+  .floatField('value', 24)</code></pre>
+                To complete the task, your point should instantiate <em>api_requests</em> and should tag the following data:
+                <ul>
+                    <li><code>method</code> - the HTTP method of the request</li>
+                    <li><code>path</code> - the path of the request</li>
+                    <li><code>status_code</code> - the status code of the response</li>
+                </ul>
+                Moreover, it should define a <em>count</em> field with the value 1 as an <em>intField</em> and the <em>latency_ms</em> field with the latency of the request as a <em>floatField</em>.
+                <li>Define another <em>Point()</em> for the <em>user_growth</em></li>
+                The point should tag the <em>event</em> of the user growth and it should also define a <em>count</em> field with the value 1 as an <em>intField</em>. Finally, you need
+                to wrie the poin to the InfluxDB using the <em>writeApi.writePoint()</em> method.
+            </ul>
+
+        </p>
+
+        <h5>4.4.3.3 Step 3: Integrate the functions into the <em>statistics.middleware.js</em></h5>
+        <p>
+            Now we have implemented the client and defined the points, but we haven't integrated the functions into the <em>statistics.middleware.js</em> file which 
+            is the logical integration point for our InfluxDB client since it is responsible for tracking API requests and user statistics.
+            To fullfill the task, your need to modify the <em>statistics.middleware.js</em> file according to the <em>NOTE</em> instructions.
+        </p>
+
+        <ul>
+            <li>add the <em>writeUserGrowth</em> function for new user registrations and use <em>registration</em> as the input event argument</li>
+            <pre><code>// reffering our functions can be done via the app.influx object, e.g.
+app.influx.writeUserGrowth('registration');</code></pre>
+            <li>add the <em>writeUserGrowth</em> function for user unregistrations and use <em>deletion</em> as the input event argument</li>
+            <li>add the <em>writeApiRequest</em> function for the api requests and take the previous defined variables for the input arguments</li>
+        </ul>
+
+        <h5>4.4.3.4 Step 4: Setup InfluxDB on application start up.</h5>
+        <p>
+            Finally, we need to set up the client to be used on application start up. This can be done within the <em>index.js</em> file. You can refer to the <em>NOTE</em> instructions within the file to implement the setup function and to call it on application start up.
+            Take the <em>Setup Cache</em> snippet as a template for your implementation.
+            <pre><code>//
+// Setup Cache
+//
+try {
+  app.log.info('Trying to setup cache.');
+  await setupCache(app);
+  app.log.debug('Cache setup completed successfully.');
+} catch (err) {
+  app.log.error("Failed to setup cache");
+  app.log.error(err.message);
+  process.exit(1);
+}</code></pre>
+        </p>
+
+        <h5>4.4.3.5 Step 5: Verify and Write data to InfluxDB</h5>
+        <p>
+            From a code side of view everything should be prepared now to write data into InfluxDB so let's try it out. 
+            
+            <ul>
+                <li>Restart your the compose setup</li>
+                <li>Open a browser on <a href="http://localhost:5173">http://localhost:5173</a>which should navigate you to the Home window of the FancyFileServer Frontend.</li>
+                <li>Click on Register and prepare all information to register a new user</li>
+                <li>Open DockerDesktop's container overview and click on the <em>fancy_fileserver_dev</em> container, to observe the live logs of the backend dev application.</li>
+                <li>Back on the registration form, click on <em>register</em> and check if the log is tracked at the backend</li>
+                <div style="text-align: left; margin: 20px 0;">
+                    <a href="ibackend_log_user_registration.png" target="_blank">
+                        <img src="backend_log_user_registration.png" alt="Backend User Registration" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+                    </a>
+                </div>
+            </ul>
+            
+            </br>
+            Open a new browser tab on <a href="http://localhost:8086">http://localhost:8086</a> and provide your login credentials for the InfluxDB page. 
+            <ul>
+                <li>Click on Buckets and check if the api_metrics bucket is visible</li>
+                <li>Within the Data Explorer overview, you can click on api_metrics > user_growth > count > registration and finally on submit</li>
+                <li>If not set, choose a Table view</li>
+            </ul>
+            The following entry should be visible in the graph showing the user growth:
+                <div style="text-align: left; margin: 20px 0;">
+                    <a href="influx_db_user_registration.png" target="_blank">
+                        <img src="influx_db_user_registration.png" alt="InfluxDB User Registration" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+                    </a>
+                </div>
+            
+            </br>
+            <div class="info">
+                <h5 id="hint-1">Congratulation</h5>
+                <p>Congratulation, you have successfully connected your Fancy Fileserver application with InfluxDB. In a next step we are going to connect the current setup with an additional Grafana Dashboard, useable to track various kinds of application metrices.</p>
+            </div>
+
+        </p>
+
+    <h4 id="setup-grafana">4.4.4 Setup Grafana</h4>
+
+    <h5>4.4.4.1 Step 1: Add Grafana to our <em>docker-compose.yml</em> file</h5>
+       <p>
+                <ul>
+            <li>Add a new service entry: <em>grafana</em> within the <em>docker-compose.yaml</em></li>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>image</code></td>
+                        <td><code>grafana/grafana:10.4.0</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>container_name</code></td>
+                        <td><code>grafana</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>profiles</code></td>
+                        <td><code>["dev", "prod"]</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ports</code></td>
+                        <td><code>3001:3000</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>environment</code></td>
+                        <td>
+                            <ul>
+                                <li><code>GF_SECURITY_ADMIN_USER=&lt;your choice&gt;</code></li>
+                                <li><code>GF_SECURITY_ADMIN_PASSWORD=&lt;your choice&gt;</code></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>ipv4_address</code></td>
+                        <td><code>172.20.0.50</code> (must be integrated in the <code>fancy_fileserver network</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>volumes</code></td>
+                        <td><code>grafana_data:/var/lib/grafana</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </ul>
+
+       </p>
+
+       <h5>4.4.4.2 Step 2: Configure devcontainer.json & Verify Grafana</h5>
+
+        <p> 
+            Since we have prepared our <em>docker-compose.yml</em>, we need to slightly modify our <em>devcontainer.json</em> file to smoothly integrate Grafana into our setup.
+        </p>
+
+        <table>
+                <thead>
+                    <tr>
+                        <th>Variable Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>runServices</code></td>
+                        <td><code>grafana</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>forwardPorts</code></td>
+                        <td><code>3001</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>portsAttributes</code></td>
+                        <td><code>
+                            "3001": {
+      "label": "Grafana",
+      "onAutoForward": "silent"
+    }</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <p>
+            Now everything is defined to spin up an Grafana instance within our Fancy FileServer ecosystem. Restart the entire Docker Compose setup to apply the changes.
+        </p>
+
+
+    <h5>4.4.4.3 Step: 3 Verify Grafana is up and running</h5>
+    <p>
+        If you followed the steps correctly, you should be able to open Grafana on <a href="http://localhost:3001">http://localhost:3001</a>. Use the credentials defined in the environment variables to log in.
+    </p>
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="grafana_login.png" target="_blank">
+            <img src="grafana_login.png" alt="Grafana Login" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </a>
+    </div>
+    
+    <h4 id="connect-influx-and-grafana">4.4.5 Connect InfluxDB with Grafana</h4>
+       <p>
+        We set up InfluxDB and Grafana, now we need to connect both applications to be able to visualize the data stored in InfluxDB with Grafana. To do this, we need to add InfluxDB as a data source in Grafana.
+       </p>
+
+       <ul>
+        <li>Open Grafana on <a href="http://localhost:3001">http://localhost:3001</a> and log in with your Grafana credentials</li>
+        <li>Click on the hamburger menu on the left corner and click on <em>Connections</em> &gt <em>Add new connection</em></li>
+        <li>Select InfluxDB as a data source and click on <em>Add new data source</em> on the right corner.</li>
+        <li>Provide the following information:
+            <ul>
+                <li><code>Name</code>: &lt;your influxdb connection name&gt;</li>
+                <li><code>URL</code>: enter <code>http://influxdb:8086</code> (this is the internal URL of the InfluxDB container within the Docker network)</li>
+                <li><code>Database</code>: api_metrics (as defined in the docker-compose.yml file)</li>
+                <li><code>User</code>: &lt;your InfluxDB admin user&gt;(as defined in the docker-compose.yml file)</li>
+                <li><code>Token</code>: &lt;your InfluxDB admin token&gt; (as defined in the docker-compose.yml file)</li>
+            </ul>
+        <li>Click on <em>Save & Test</em> to verify the connection. If the connection is successful, you should see a message indicating that the data source is working.</li>
+        <div style="text-align: left; margin: 80px 0;">
+        <a href="successfull_influx_db_connection.png" target="_blank">
+            <img src="successfull_influx_db_connection.png" alt="Grafana InfluxDB connection" style="max-width: 60%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+        </a>
+    </div>
+       </ul>
+
+    <h4 id="add-grafana-dashboard">4.4.6 Add the Grafana Dashboard</h4>
+    <h5>Step 1: Configure the user growth panel</h5>
+    <ul>
+        <li>Click on the hamburger menu and navigate to <em>Dashboards</em></li>
+        <li>Click on <em>Create Dashboard</em> and <em>Add visualization</em>
+            <ul>
+                <li>Select the previously created InfluxDB data source, which will navigate you to the <em>Edit panel</em> overview</li>
+                <li>Click on the edit icon within the query section and insert the following query
+                    <pre><code>from(bucket: "api_metrics")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "user_growth" and r._field == "count")
+  |> map(fn: (r) => ({ r with _value: if r.event == "deletion" then -r._value else r._value }))
+  |> cumulativeSum()
+  |> yield(name: "total_users")</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>We need to configure the panel on the right side
+            <ul>
+                <li>Change the visualization type to <em>Time series</em></li>
+                <li>Under the <em>Field</em> tab, change the name to <code>User Growth</code>, the unit to <code>short</code> and set the decimals to 0.</li>
+                <li>Set the <em>Fill opacity</em> to 20</li>
+                <li>Set the <em>Line interpolation</em> to <em>Step After</em></li>
+                <li>Set the <em>Show points</em> to <em>Always</em></li>
+                <li>Click on <em>Apply</em> on the top right corner to save the panel configuration and to navigate back to the dashboard overview.</li>
+            </ul>
+        </li>
+        <li>In the dashboard overview we need to do the following
+            <ul>
+                <li>Click on the dashboard settings icon on the top right corner and set the dashboard name to <code>FancyFileServer Dashboard</code></li>
+                <li>Click on the time range selector and set the default time range to <em>Last 30 minutes</em></li>
+                <li>Click on the Refresh Dashboard icon on the right corner and set the auto refresh to <em>10s</em></li>
+                <li>Click on <em>Save dashboard</em></li>
+            </ul>
+        </li> 
+    </ul>
+    <h5>Step 2: Verify the user growth dashboard</h5>
+    <p>
+        Now everything should be set up to visualize the user growth in Grafana. To verify this, you can go back to the registration form of the frontend application 
+        on <a href="http://localhost:5173">http://localhost:5173</a> and register a new user. 
+        After the registration, you should see a new entry in the InfluxDB and the user growth panel in Grafana should update accordingly showing the increase in users.
+        <br><br>
+        To add some more users to our panel we can use our api smoke tests which are located in the <em>tests/api/smoke</em> folder. Connect with our <em>devcontainer</em> and run the tests with the following command:
+        <pre><code>bun run test:load:smoke:api  # API smoke test</code></pre>
+        
+        This will add some more users to the InfluxDB and you should see the user growth panel in Grafana updating accordingly. You can also check the InfluxDB Data Explorer to verify that the new entries are added to the database.
+        <br><br>
+        Finally, if you can also run the spike tests to generate more load on the system and to see how the user growth panel reacts on a bigger amount of new users.
+        <pre><code>bun run test:load:spike:api  # API spike test</code></pre>
+        </br>
+            <div class="info">
+                <h5 id="hint-3">Congratulation</h5>
+                <p>Congratulation, you have successfully integrated a Grafana Dashboard for the user growth over time to our FancyFileServer project.</p>
+            </div>
+    </p>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -447,6 +918,69 @@ cd docker-bench-security</code></pre>
             
             wrapper.appendChild(button);
         });
+
+        const toc = document.querySelector('.toc');
+        const tocLinks = toc ? Array.from(toc.querySelectorAll('a[href^="#"]')) : [];
+        const sections = tocLinks
+            .map(function(link) {
+                const target = document.querySelector(link.getAttribute('href'));
+                return target ? { link, target } : null;
+            })
+            .filter(Boolean);
+
+        function clearActiveStates() {
+            tocLinks.forEach(function(link) {
+                link.classList.remove('active', 'active-trail');
+                link.removeAttribute('aria-current');
+            });
+        }
+
+        function setActiveLink(activeLink) {
+            if (!activeLink) {
+                return;
+            }
+
+            clearActiveStates();
+            activeLink.classList.add('active');
+            activeLink.setAttribute('aria-current', 'true');
+
+            let parentListItem = activeLink.closest('li');
+
+            while (parentListItem) {
+                const parentList = parentListItem.parentElement.closest('li');
+                if (!parentList) {
+                    break;
+                }
+
+                const parentLink = parentList.querySelector(':scope > a');
+                if (parentLink) {
+                    parentLink.classList.add('active-trail');
+                }
+
+                parentListItem = parentList;
+            }
+        }
+
+        function updateActiveSection() {
+            const scrollPosition = window.scrollY + 140;
+            let currentSection = sections[0];
+
+            sections.forEach(function(section) {
+                if (section.target.offsetTop <= scrollPosition) {
+                    currentSection = section;
+                }
+            });
+
+            if (currentSection) {
+                setActiveLink(currentSection.link);
+            }
+        }
+
+        if (sections.length > 0) {
+            updateActiveSection();
+            window.addEventListener('scroll', updateActiveSection, { passive: true });
+            window.addEventListener('resize', updateActiveSection);
+        }
     });
 </script>
 </body>
