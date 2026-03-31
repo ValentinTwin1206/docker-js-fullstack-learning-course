@@ -97,6 +97,29 @@ export const authenticate = async (req, reply) => {
 
 
 /**
+ * Middleware to ensure that only non-admin users can access the route.
+ * Useful for routes that should be hidden from admins, e.g. delete account.
+ * 
+ * @param {import("fastify").FastifyRequest} req - Fastify request object
+ * @param {import("fastify").FastifyReply} reply - Fastify reply object
+ * @throws {ForbiddenError}
+ */
+export const onlyNonSysAdminsCanPass = role => {
+  return async function (req, reply) {
+
+    app.log.info("Checking that user is not an admin");
+
+    // Always allow sysadmin
+    if (req.user.username === process.env.SYS_USER_USERNAME || req.user.role === "sysadmin" ) {
+      app.log.warn(`User '${req.user.username}' with role '${req.user.role}' tries to access ${req.method} ${req.url} which is forbidden for system admins.`);
+      throw new ForbiddenError(`Admins can not use ${req.method} ${req.url}`);
+    }
+    return;
+  }
+};
+
+
+/**
  * Middleware to validate appropiate user permissions
  *  *
  * @param {import("fastify").FastifyRequest} req - Fastify request object

@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 /**
  * ProfileForm — editable user profile fields.
- * Replaces the #profileForm in profile.hbs.
  */
-export default function ProfileForm({ user, onSubmit }) {
+export default function ProfileForm({ user, onSubmit, onDelete }) {
   const [firstname, setFirstname] = useState(user.firstname || '');
   const [lastname, setLastname] = useState(user.lastname || '');
   const [email, setEmail] = useState(user.email || '');
   const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +77,32 @@ export default function ProfileForm({ user, onSubmit }) {
           {submitting ? 'Updating…' : 'Update'}
         </button>
       </div>
+
+      <hr className="my-4" />
+
+      <div className="text-center">
+        <button id="deleteAccountButton" type="button" className="btn btn-danger btn-sm" onClick={() => setConfirming(true)} >
+            Unregister Account
+        </button>
+        {confirming && (
+          <div className="mt-3">
+            <p className="text-danger small">
+              Are you sure? This action cannot be undone.
+            </p>
+
+            <div className="d-flex gap-2 justify-content-center">
+              <button id="cancelDeleteButton" type="button" className="btn btn-secondary btn-sm" onClick={() => setConfirming(false)} >
+                Cancel
+              </button>
+
+              <button id="confirmDeleteButton" type="button" className="btn btn-danger btn-sm" onClick={onDelete}>
+                Yes, delete my account
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
     </form>
   );
 }

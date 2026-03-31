@@ -1,15 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
-import toast          from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import toast           from 'react-hot-toast';
 
 import { useAuth }    from '../hooks/useAuth';
 import Navbar         from '../components/Navbar';
 import ProfileForm    from '../components/profile/ProfileForm';
 import ApiKeySection  from '../components/profile/ApiKeySection';
-import { updateUser } from '../api/users';
+import { deleteUser,
+         updateUser } from '../api/users';
 import { getApiKeys } from '../api/apikeys';
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
+  // 
+  const navigate = useNavigate();
   const username = user?.username;
 
   const [apiKeys, setApiKeys] = useState([]);
@@ -43,6 +47,21 @@ export default function ProfilePage() {
     return res;
   };
 
+  // Delete account
+  const handleDeleteAccount = async () => {
+
+    try {
+      const res = await deleteUser(username);
+      if (res.ok && res.success) {
+        toast.success('Account deleted');
+        navigate('/login'); // redirect
+      } else { toast.error(res.message || 'Delete failed'); }
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong');
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -66,7 +85,7 @@ export default function ProfilePage() {
 
           {/* RIGHT SIDE: Profile Form */}
           <div className="card shadow-sm p-4 flex-grow-1" style={{ minWidth: 300, maxWidth: 600 }}>
-            <ProfileForm user={user} onSubmit={handleUpdateProfile} />
+            <ProfileForm user={user} onSubmit={handleUpdateProfile} onDelete={handleDeleteAccount}/>
           </div>
         </div>
       </div>

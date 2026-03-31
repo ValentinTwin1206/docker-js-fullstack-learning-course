@@ -64,7 +64,7 @@ export default function Navbar() {
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarProfile">
                 <li>
-                  <NavLink className="dropdown-item" to="/profile">Edit Profile</NavLink>
+                  <NavLink id="profileLink" className="dropdown-item" to="/profile">Edit Profile</NavLink>
                 </li>
                 <li>
                   <a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a>

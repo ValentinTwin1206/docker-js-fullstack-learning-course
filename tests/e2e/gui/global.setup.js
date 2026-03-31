@@ -1,7 +1,8 @@
 import config from '../../../playwright.config.js';
 import { 
   getTestUserData,
-  generateApiKey
+  generateApiKey,
+  registerUserViaApi
 } from '../helpers/test-helpers.js';
 
 /**
@@ -17,6 +18,8 @@ export default async function globalSetup() {
   
   let connected     = false;
 
+
+  process.env.BASEURL = baseURL; // Expose baseURL to environment for use in tests
 
   console.log(`[SETUP] Checking if '${process.env.SERVER_NAME}' is running at '${baseURL}'...`);
 
@@ -69,33 +72,11 @@ export default async function globalSetup() {
   // Pre-Register user via API
   try {
 
-    const testUser = await getTestUserData('preRegistered');
+    let testUser = await getTestUserData('preRegistered');
     
     // Register user via REST API
     console.log(`[SETUP] Trying to register '${testUser.firstname} ${testUser.lastname}'...`);
-    const response = await fetch(`${baseURL}/api/v1/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        firstname: testUser.firstname,
-        lastname: testUser.lastname,
-        email: testUser.email,
-        password: testUser.password
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`[SETUP] Failed to register user: ${response.status} - ${JSON.stringify(errorData)}`);
-    }
-
-    const result = await response.json();
-    const registeredUser = {
-      ...testUser,
-      username: result.data.username
-    };
+    const registeredUser = await registerUserViaApi(baseURL, testUser);
     
     // Expose 'preRegistered' user to environment
     process.env.PREREGISTERED_USERNAME  = registeredUser.username;

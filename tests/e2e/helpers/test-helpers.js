@@ -8,6 +8,7 @@ import { SignJWT } from 'jose';
 export const getTestUserData = async username => {
   const testUsersModule = await import('../fixtures/test-users.json', { with: { type: 'json' } });
   const testUsersData = testUsersModule.default;
+
   const { firstname, lastname, password, email } = testUsersData[username];
   return {
     firstname,
@@ -145,6 +146,38 @@ export const registerUser = async (page, user) => {
 
 
 /**
+ *
+ * @param {*} baseURL  
+ * @param {*} userData 
+ * @returns 
+ */
+export const registerUserViaApi = async (baseURL, userData) => {
+  const response = await fetch(`${baseURL}/api/v1/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      password: userData.password
+    })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`Failed to register user via API: ${response.status} - ${JSON.stringify(errorData)}`);
+  }
+
+  const result = await response.json();
+  return {
+    ...userData,
+    username: result.data.username
+  };
+};
+
+/**
  * Attempt to register a user and expect failure
  */
 export const registerUserWithFailure = async (page, user) => {
@@ -180,6 +213,27 @@ export const registerUserWithFailure = async (page, user) => {
   }
 };
 
+/**
+ * Attempt to unregister the user by clicking the logout button
+ * Expects to be redirected to the login page on success
+ * @param {*} page 
+ */
+export const unregisterUser = async (page) => {
+  await page.click('#logoutButton');
+  await page.waitForURL('/login');
+  await page.waitForLoadState('domcontentloaded');
+};
+
+export const unregisterSysAdmin = async (page) => {
+  await page.click('#logoutButton');
+  
+  // Wait for error alert
+  const alertTitle = page.locator('.swal2-title');
+  const titleText = await alertTitle.textContent();
+  if (!titleText.match(/Error/i)) {
+    throw new Error('Expected error alert on logout failure');
+  }
+};
 
 /**
  * Generate JWT API key for a given username

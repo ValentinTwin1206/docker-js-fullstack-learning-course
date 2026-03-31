@@ -38,7 +38,8 @@ import {
 // MIDDLEWARE
 import {
   authenticate,
-  requireAdminRights
+  requireAdminRights,
+  onlyNonSysAdminsCanPass
 } from '../common/middlewares/authentication.middleware.js';
 import { 
   addToCacheMiddleware,
@@ -168,7 +169,7 @@ export default async function AppRoutes(app) {
   app.delete('/api/v1/users/:username', {
      preHandler: [
       authenticate,
-      requireAdminRights("sysadmin")
+      onlyNonSysAdminsCanPass("sysadmin")
     ],
     onSend: [ 
       growthTrackingHook

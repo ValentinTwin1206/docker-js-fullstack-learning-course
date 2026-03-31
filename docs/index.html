@@ -28,9 +28,8 @@
                 <ul>
                     <li><a href="#feature-development">4.1 Feature Development</a>
                         <ul>
-                            <li><a href="#feature-development-problem-description">4.1.1 Problem Description</a></li>
-                            <li><a href="#extend-the-user-schema">4.1.2 Extend the user schema</a></li>
-                            <li><a href="#add-a-deletion-view">4.1.3 Add a deletion view to the react frontend</a></li>
+                            <li><a href="#extend-the-user-schema">4.1.1 Extend the user schema</a></li>
+                            <li><a href="#add-a-deletion-view">4.1.2 Add a deletion view to the react frontend</a></li>
                         </ul>
                     </li>
                     <li><a href="#container-image-hardening">4.2 Container Image Hardening</a>
@@ -183,7 +182,7 @@
     
     <h3 id="feature-development">4.1 Feature Development</h3>
 
-    <h4 id="feature-development-problem-description">4.1.1 Problem Description</h4>
+    <h4 id="extend-the-user-schema">4.1.1 Extend the user schema</h4>
 
     <div>
         Start the Fancy FileServer project as described in the <code>README.md</code> file. Once started, open 
@@ -197,13 +196,12 @@
         </a>
     </div>
 
-    <h4 id="extend-the-user-schema">4.1.2 Extend the user schema</h4>
-
     Your exercise is to capture additional demographic information by extending the User schema 
-    to persist the sexuality of newly registered users:
-    <h5>4.1.2.1 Step 1: Update the react frontend</h5>
-    <h5>4.1.2.2 Step 2: Update backend to persist "sexuality" in database</h5>
-    <h5>4.1.2.3 Step 3: Update test modules and functions</h5>
+    to persist the sexuality of newly registered users.
+
+    <h5>4.1.1.1 Step 1: Update the react frontend</h5>
+    <h5>4.1.1.2 Step 2: Update backend to persist "sexuality" in database</h5>
+    <h5>4.1.1.3 Step 3: Update test modules and functions</h5>
 
     <div class="info">
         <h5 id="hint-1">HINTS</h5>
@@ -224,13 +222,128 @@
         </ul>
     </div>
 
-    <h4 id="add-a-deletion-view">4.1.3 Add a deletion view to the react frontend</h4>
-    Your exercise is to implement a user deletion view in the react frontend that allows users to delete their account. This feature should include a confirmation step to prevent accidental deletions and should be accessible from the user profile page.
-    <h5>4.1.3.1 Step 1: Update the react frontend to include a user deletion view</h5>
-    <h5>4.1.3.2 Step 2: Implement a confirmation step to prevent accidental deletions</h5>
-    <h5>4.1.3.3 Step 3: Make the deletion view accessible from the user profile page</h5>
-    <h5>4.1.3.4 Step 4: Extend the api and ui tests to verify your changes</h5>
+    <h4 id="add-a-deletion-view">4.1.2 Add a deletion view to the react frontend</h4>
 
+    Currently the FancyFileServer application does not provide a user deletion feature. Implementing this feature will allow users to delete their accounts and all associated data from the system.
+    <br>
+    <br>
+    Your task is to complete the implementation of the user deletion feature by updating the React frontend and backend logic accordingly.
+
+    To achieve the goal of implementing a user deletion feature, you will need to follow several steps:
+    <ul>
+        <li>Add an unregister button in the <code>ProfileForm.jsx</code></li>
+        <li>Add a confirmation view for the user to confirm the deletion</li>
+        <li>Navigate the user back to the home screen after deletions</li>
+        <li>Update the deletion middleware to prevent sysadmins from being deleted</li>
+        <li>Verify your changes with manual tests and UI tests to cover the deletion feature</li>
+    </ul> 
+    
+    <div class="info">
+        <h5 id="hint-2">HINT</h5>
+        <p>To not start from scratch, we have already provided a <code>handleDeleteAccount</code> function at the<code>ProfilePage.jsx</code>. This function is already 
+        integrated with the <code>deleteUser</code> API call. Also note, that each file contains <em>NOTE</em> instructions that will guide you through the necessary changes.
+        </p>
+    </div>
+
+    <h5>4.1.2.1 Step 1: Update the react frontend to include a user deletion view</h5>
+    
+    At first, we need to update the react frontend to include a user deletion view in the <em>ProfileForm.jsx</em> within the <em>src/components</em> folder. 
+
+    <ul>
+        <li>Add a new input variable <code>onDelete</code> to the <code>ProfileForm.jsx</code></li>
+
+        A new input variable e.g. <code>onDelete</code> must be added to the <em>ProfileForm</em> component to handle the user deletion logic. 
+
+        This variable will handle the <code>handleDeleteAccount</code> function that gets called when the user confirms the deletion of their account.
+
+        <pre><code>export default function ProfileForm({ user, onSubmit, onDelete }) { ... }</code></pre>
+        
+        <li>Add a local state variable <code>confirming</code> to the <code>ProfileForm.jsx</code></li>
+
+        Use the <code>useState()</code> declaration to introduce a new state variable called <code>confirming</code> and a set function, 
+        to update the state. By default, the state value is<code>false</code>.
+
+    <li>Add a button that sets the <code>confirming</code> state to <code>true</code> when clicked.</li>
+    Define a "Unregister" button that sets the <code>confirming</code> state to <code>true</code> when the user clicks on it <em>(this triggers React to re-render the component)</em>.
+
+    <pre><code>&lt;button id="deleteAccountButton" ... onClick={() => setConfirming(true)}>Unregister&gt;/button></code></pre>
+
+    <li>Render the confirmation UI conditionally</li>
+
+    <p>
+    Use conditional rendering to display the confirmation options only when <code>confirming</code> is <code>true</code>. Two buttons
+    should be rendered: one for confirming the deletion and another for canceling the action. The confirmation button will trigger the <code>onDelete</code> function, 
+    while the cancel button will reset the <code>confirming</code> state to <code>false</code>.
+    </p>
+
+    <pre><code>{confirming && (
+  &lt;div className="mt-3"&gt;
+    &lt;p className="text-danger small"&gt;
+      Are you sure? This action cannot be undone.
+    &lt;/p&gt;
+    &lt;div className="d-flex gap-2 justify-content-center"&gt
+
+    // Add confirmation button here
+        &lt;button id="confirmDeleteButton" type="button" className="btn btn-secondary btn-sm" onClick=...&gt;Cancel&lt;/button&gt;
+
+    // Add cancel button here
+        &lt;button id="cancelDeleteButton" type="button" className="btn btn-danger btn-sm" onClick=...&gt;Confirm&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+)}</code></pre>
+    </ul>
+
+    <h5>4.1.2.2 Step 2: Navigate the user back to the <em>/login</em> screen</h5>
+        
+    <p> Next, we need to update the <code>ProfilePage.jsx</code> to handle the proper deletion and navigation to the <em>/login</em> page after a successful deletion.</p>
+
+    <ul>
+        <li>Add the <code>onDelete</code> input argument to the <code>ProfileForm</code> object and forward the <code>handleDeleteAccount</code> handler to it.</li>
+
+        <pre><code>&lt;ProfileForm ... &gt;</code></pre>
+        
+        <li>Handle the navigation to the <em>/login</em> page after successful deletion</li>
+        
+        <p>React defines a <a href="https://reactrouter.com/api/hooks/useNavigate">useNavigation()</a> hook which helps us to handle navigation. 
+            Use the hook and instantiate a navigate object. The navigate should route the customer to the "<em>/login</em>" page after a successful deletion of the user account.
+        </p>
+
+    </ul>
+
+    <h5>4.1.2.3 Step 3: Update the deletion middleware</h5>
+    <ul>
+        <li>Update the <code>onlyNonSysAdminsCanPass</code> function in the <code>authentication.middleware.js</code> file</li>
+            <p>Currently this function only acts as a placeholder, you need to extend the function
+                to check if the user making the deletion request has a sysadmin role. 
+                If the user is a sysadmin, you can throw an <code>ForbiddenError</code> with a sufficient error message.
+            </p>
+        <li>Add the <code>onlyNonSysAdminsCanPass</code> as a middleware within the <code>app.routes.js</code> file for the user deletion route</li>
+    </ul>
+
+    <h5>4.1.2.4 Step 4: Verify your changes</h5>
+    <p>Since everything should be in place, it is now time to test our implementation. Create a user, navigate to the user's profile page and 
+    try to delete the user. After the deletion, check the backend logs to verify that the user has been deleted successfully and that sysadmins cannot be deleted.
+    </p>
+    
+    <div class="info">
+        <h5 id="hint-2">HINT</h5>
+        <p>Open your running DockerDesktop instance and click on the <em>fancy_fileserver_dev</em> backend container to check the live logs and respective API calls. 
+        </p>
+    </div>
+
+    <h5>4.1.2.5 Step 5: Extend the ui tests</h5>
+    
+    Finally, we need to extend the UI tests to include tests for the user deletion feature. To not start from scratch, we have already provided a test skeleton in 
+    the <code>profile.spec.js</code> file with some <em>NOTE</em> information to guide you through the exercise. 
+    The <code>profile.spec.js</code> file contains two testcases that verify the previous implemented user deletion feature.
+
+    <div class="info">
+        <h5 id="hint-2">HINT</h5>
+        <p>To not run the whole test suite, you can run the specific test file with the following command:
+    <pre><code>npx playwright test tests/e2e/gui/profile.spec.js -g "Unregister a user but cancel confirmation"</code></pre> 
+        </p>
+    </div>
+    
     <h3 id="container-image-hardening">4.2 Container Image Hardening</h3>
 
     <h4>4.2.1 Problem Description</h4>
@@ -288,7 +401,7 @@ cd docker-bench-security</code></pre>
     </ul>
 
     <div class="info">
-        <h5 id="hint-2">4.2.3 HINTS</h5>
+        <h5 id="hint-2">HINTS</h5>
         <p>The following changes can help increase your Docker Bench Security score:</p>
         <ul>
             <li><code>Dockerfile</code> - Harden the container image configuration by specifying a non-privileged user</li>
